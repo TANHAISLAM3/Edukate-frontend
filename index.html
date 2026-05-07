@@ -1417,7 +1417,7 @@
       // ════════════════════════════
       // LOGIC APP URLS
       // ════════════════════════════
-      const PROXY = "https://corsproxy.io/?";
+      const PROXY = "";
       const RAW = {
         POST_VIDEO:
           "https://prod-30.germanywestcentral.logic.azure.com:443/workflows/eb420e3876224ab6b51607918f79e7f4/triggers/When_an_HTTP_request_is_received/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2FWhen_an_HTTP_request_is_received%2Frun&sv=1.0&sig=ydkchJbl73pXFw5D4AjMxAFXk_es585T5Wp5Y3bp6qc",
@@ -1434,10 +1434,7 @@
         POST_INTERACTION:
           "https://prod-13.germanywestcentral.logic.azure.com:443/workflows/2dec047a8f034434bb6d550ae238ef74/triggers/When_an_HTTP_request_is_received/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2FWhen_an_HTTP_request_is_received%2Frun&sv=1.0&sig=DJnS_894mPQsTBnhc1wnpmZp4Y-lGUZMyXlqH_t_Bos",
       };
-      const API = {};
-      Object.keys(RAW).forEach(
-        (k) => (API[k] = PROXY + encodeURIComponent(RAW[k])),
-      );
+      const API = RAW;
 
       // ════════════════════════════
       // STATE

@@ -1,1696 +1,595 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Edukate — Cloud Learning Platform</title>
-    <script src="https://aka.ms/csspeech/jsbrowserpackageraw"></script>
-    <link
-      href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:wght@300;400;500&display=swap"
-      rel="stylesheet"
-    />
-    <style>
-      :root {
-        --green: #00c48c;
-        --green-dark: #008f67;
-        --green-glow: rgba(0, 196, 140, 0.12);
-        --bg: #0a0e0d;
-        --bg2: #111715;
-        --bg3: #161d1a;
-        --border: rgba(255, 255, 255, 0.07);
-        --text: #e8f0ed;
-        --text2: #7a9088;
-        --danger: #ff4d6a;
-        --amber: #ffb830;
-        --blue: #64a0ff;
-        --purple: #a78bfa;
-      }
-      *,
-      *::before,
-      *::after {
-        box-sizing: border-box;
-        margin: 0;
-        padding: 0;
-      }
-      body {
-        font-family: "DM Sans", sans-serif;
-        background: var(--bg);
-        color: var(--text);
-        min-height: 100vh;
-      }
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Edukate — Cloud Learning Platform</title>
+<script src="https://aka.ms/csspeech/jsbrowserpackageraw"></script>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --green:#00C48C;--green-dark:#008F67;--green-glow:rgba(0,196,140,0.12);
+    --bg:#0A0E0D;--bg2:#111715;--bg3:#161D1A;
+    --border:rgba(255,255,255,0.07);--text:#E8F0ED;--text2:#7A9088;
+    --danger:#FF4D6A;--amber:#FFB830;--blue:#64A0FF;--purple:#A78BFA;
+  }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+  nav{display:flex;align-items:center;justify-content:space-between;padding:16px 28px;border-bottom:1px solid var(--border);background:rgba(10,14,13,0.96);position:sticky;top:0;z-index:200;backdrop-filter:blur(12px)}
+  .logo{font-family:'Syne',sans-serif;font-weight:800;font-size:21px;color:var(--green)}
+  .logo span{color:var(--text)}
+  .nav-tabs{display:flex;gap:4px}
+  .nav-tab{background:none;border:none;color:var(--text2);font-family:'DM Sans',sans-serif;font-size:14px;padding:7px 15px;border-radius:8px;cursor:pointer;transition:all 0.2s}
+  .nav-tab:hover{background:var(--bg3);color:var(--text)}
+  .nav-tab.active{background:var(--green-glow);color:var(--green);border:1px solid rgba(0,196,140,0.2)}
+  .dot{width:7px;height:7px;border-radius:50%;background:var(--green);display:inline-block;margin-right:5px;animation:pulse 2s infinite}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.3}}
+  .page{display:none;padding:28px;max-width:1100px;margin:0 auto;animation:fadeIn 0.25s ease}
+  .page.active{display:block}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+  .card{background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:22px;margin-bottom:18px}
+  .card-title{font-family:'Syne',sans-serif;font-size:16px;font-weight:600;margin-bottom:3px}
+  .card-sub{font-size:13px;color:var(--text2);margin-bottom:16px}
+  label{display:block;font-size:13px;color:var(--text2);margin-bottom:5px;margin-top:13px}
+  input,select,textarea{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:10px 13px;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--text);outline:none;transition:border 0.2s}
+  input:focus,select:focus,textarea:focus{border-color:var(--green)}
+  textarea{resize:vertical;min-height:70px}
+  select option{background:var(--bg3)}
+  .btn{display:inline-flex;align-items:center;gap:6px;padding:9px 18px;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:500;cursor:pointer;border:none;transition:all 0.2s}
+  .btn-primary{background:var(--green);color:#000;width:100%;margin-top:16px;font-size:15px;padding:12px;border-radius:12px;justify-content:center}
+  .btn-primary:hover{background:var(--green-dark)}
+  .btn-primary:disabled{background:var(--bg3);color:var(--text2);cursor:not-allowed}
+  .btn-ghost{background:var(--bg3);color:var(--text);border:1px solid var(--border)}
+  .btn-ghost:hover{border-color:var(--green);color:var(--green)}
+  .btn-red{background:rgba(255,77,106,0.1);color:var(--danger);border:1px solid rgba(255,77,106,0.2)}
+  .btn-red:hover{background:rgba(255,77,106,0.2)}
+  .btn-purple{background:rgba(167,139,250,0.1);color:var(--purple);border:1px solid rgba(167,139,250,0.2)}
+  .btn-purple:hover{background:rgba(167,139,250,0.2)}
+  .btn-sm{padding:5px 11px;font-size:12px;border-radius:7px}
+  .btn-mic{background:var(--bg3);border:1px solid var(--border);color:var(--text2);padding:10px 13px;border-radius:10px;cursor:pointer;font-size:18px;transition:all 0.2s}
+  .btn-mic:hover{border-color:var(--green);color:var(--green)}
+  .btn-mic.listening{background:rgba(255,77,106,0.15);border-color:var(--danger);color:var(--danger);animation:micPulse 1s infinite}
+  @keyframes micPulse{0%,100%{opacity:1}50%{opacity:0.6}}
+  .status{padding:11px 15px;border-radius:10px;font-size:13px;margin-top:12px;display:none;line-height:1.5}
+  .status.show{display:block}
+  .status.success{background:rgba(0,196,140,0.1);color:var(--green);border:1px solid rgba(0,196,140,0.2)}
+  .status.error{background:rgba(255,77,106,0.1);color:var(--danger);border:1px solid rgba(255,77,106,0.2)}
+  .status.loading{background:rgba(255,184,48,0.08);color:var(--amber);border:1px solid rgba(255,184,48,0.2)}
+  .badge{display:inline-block;font-family:monospace;font-size:11px;padding:3px 10px;border-radius:20px;background:var(--bg3);border:1px solid var(--border);color:var(--text2);margin-bottom:12px}
+  .badge.post{border-color:rgba(0,196,140,0.3);color:var(--green)}
+  .badge.get{border-color:rgba(100,160,255,0.3);color:var(--blue)}
+  .badge.put{border-color:rgba(255,184,48,0.3);color:var(--amber)}
+  .badge.del{border-color:rgba(255,77,106,0.3);color:var(--danger)}
+  .badge.speech{border-color:rgba(167,139,250,0.3);color:var(--purple)}
+  .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:22px}
+  .stat{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:18px}
+  .stat-val{font-family:'Syne',sans-serif;font-size:28px;font-weight:800;color:var(--green)}
+  .stat-label{font-size:12px;color:var(--text2);margin-top:2px}
+  .page-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:22px;flex-wrap:wrap;gap:10px}
+  .page-header h1{font-family:'Syne',sans-serif;font-size:22px;font-weight:700}
+  .search-row{display:flex;gap:10px;margin-bottom:20px;align-items:center}
+  .search-wrap{flex:1;position:relative}
+  .search-wrap input{padding-left:36px}
+  .search-icon{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--text2);font-size:14px;pointer-events:none}
+  .filter-select{width:160px}
+  .speech-panel{background:linear-gradient(135deg,rgba(167,139,250,0.08),rgba(0,196,140,0.05));border:1px solid rgba(167,139,250,0.2);border-radius:14px;padding:18px;margin-bottom:20px}
+  .speech-panel-title{font-family:'Syne',sans-serif;font-size:14px;font-weight:600;color:var(--purple);margin-bottom:10px;display:flex;align-items:center;gap:8px}
+  .speech-controls{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+  .speech-status{font-size:13px;color:var(--text2);margin-top:8px;min-height:20px}
+  .speech-status.speaking{color:var(--purple)}
+  .speech-status.listening{color:var(--danger)}
+  .speech-wave{display:none;align-items:center;gap:3px;margin-left:6px}
+  .speech-wave.show{display:inline-flex}
+  .wave-bar{width:3px;height:14px;background:var(--danger);border-radius:2px;animation:wave 0.8s infinite ease-in-out}
+  .wave-bar:nth-child(2){animation-delay:0.1s;height:20px}
+  .wave-bar:nth-child(3){animation-delay:0.2s}
+  .wave-bar:nth-child(4){animation-delay:0.1s;height:20px}
+  .wave-bar:nth-child(5){animation-delay:0s}
+  @keyframes wave{0%,100%{transform:scaleY(0.5)}50%{transform:scaleY(1)}}
+  .video-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px}
+  .vcard{background:var(--bg2);border:1px solid var(--border);border-radius:14px;overflow:hidden;transition:border-color 0.2s,transform 0.2s;cursor:pointer}
+  .vcard:hover{border-color:rgba(0,196,140,0.35);transform:translateY(-3px)}
+  .vthumb{height:124px;background:var(--bg3);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+  .vthumb img{width:100%;height:100%;object-fit:cover;transition:transform 0.3s}
+  .vcard:hover .vthumb img{transform:scale(1.05)}
+  .vthumb-overlay{position:absolute;inset:0;background:rgba(0,0,0,0.3);display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity 0.2s}
+  .vcard:hover .vthumb-overlay{opacity:1}
+  .vthumb-play{width:42px;height:42px;background:rgba(0,196,140,0.9);border-radius:50%;display:flex;align-items:center;justify-content:center}
+  .vthumb-play svg{width:16px;height:16px;fill:#000;margin-left:3px}
+  .vinfo{padding:12px}
+  .vtitle{font-size:13px;font-weight:500;margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .vmeta{font-size:11px;color:var(--text2)}
+  .vactions{padding:8px 12px;border-top:1px solid var(--border);display:flex;gap:5px;align-items:center}
+  .like-btn{background:none;border:none;cursor:pointer;font-size:13px;color:var(--text2);transition:all 0.2s;padding:3px 6px;border-radius:6px}
+  .like-btn:hover,.like-btn.liked{color:var(--danger)}
+  .speak-btn{background:none;border:none;cursor:pointer;font-size:13px;color:var(--text2);transition:all 0.2s;padding:3px 6px;border-radius:6px}
+  .speak-btn:hover{color:var(--purple)}
+  .skeleton{background:var(--bg2);border:1px solid var(--border);border-radius:14px;overflow:hidden;animation:shimmer 1.5s infinite}
+  .skeleton-thumb{height:124px;background:var(--bg3)}
+  .skeleton-line{height:11px;background:var(--bg3);border-radius:6px;margin:10px 12px 5px}
+  .skeleton-line.short{width:55%}
+  @keyframes shimmer{0%,100%{opacity:1}50%{opacity:0.5}}
+  .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.88);z-index:500;display:none;align-items:center;justify-content:center;backdrop-filter:blur(6px)}
+  .modal-overlay.show{display:flex}
+  .modal{background:var(--bg2);border:1px solid var(--border);border-radius:20px;width:90%;max-width:760px;max-height:90vh;overflow-y:auto}
+  .modal-header{display:flex;align-items:center;justify-content:space-between;padding:20px 24px 0}
+  .modal-title{font-family:'Syne',sans-serif;font-size:18px;font-weight:600}
+  .modal-close{background:var(--bg3);border:1px solid var(--border);border-radius:8px;color:var(--text2);cursor:pointer;padding:6px 11px;font-size:15px}
+  .modal-close:hover{color:var(--text)}
+  .modal-body{padding:20px 24px 24px}
+  .video-player{width:100%;border-radius:12px;background:#000;margin-bottom:14px;aspect-ratio:16/9}
+  .modal-meta{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+  .modal-badge{font-size:12px;padding:3px 10px;border-radius:20px;background:var(--bg3);color:var(--text2)}
+  .speech-actions{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;padding:14px;background:rgba(167,139,250,0.06);border:1px solid rgba(167,139,250,0.15);border-radius:12px}
+  .speech-action-title{font-size:12px;color:var(--purple);margin-bottom:8px;font-weight:500;width:100%}
+  .speech-indicator{font-size:12px;color:var(--purple);margin-top:6px;width:100%;display:none}
+  .speech-indicator.show{display:block}
+  .comments-section{border-top:1px solid var(--border);padding-top:16px;margin-top:14px}
+  .comment-title{font-family:'Syne',sans-serif;font-size:14px;font-weight:600;margin-bottom:12px}
+  .comment-input-row{display:flex;gap:10px;margin-bottom:14px}
+  .comment-input-row input{flex:1}
+  .comment-item{padding:10px 14px;background:var(--bg3);border-radius:10px;margin-bottom:8px;font-size:13px}
+  .comment-user{font-weight:500;color:var(--green);font-size:12px;margin-bottom:3px}
+  .comment-text{color:var(--text);line-height:1.4}
+  .toast-container{position:fixed;bottom:24px;right:24px;z-index:1000;display:flex;flex-direction:column;gap:10px}
+  .toast{padding:12px 18px;border-radius:12px;font-size:13px;font-weight:500;animation:toastIn 0.3s ease;max-width:320px}
+  .toast.success{background:rgba(0,196,140,0.15);color:var(--green);border:1px solid rgba(0,196,140,0.3)}
+  .toast.error{background:rgba(255,77,106,0.15);color:var(--danger);border:1px solid rgba(255,77,106,0.3)}
+  .toast.info{background:rgba(167,139,250,0.12);color:var(--purple);border:1px solid rgba(167,139,250,0.25)}
+  @keyframes toastIn{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:translateX(0)}}
+  .security-badge{display:inline-flex;align-items:center;gap:5px;font-size:11px;padding:4px 10px;border-radius:20px;background:rgba(0,196,140,0.08);border:1px solid rgba(0,196,140,0.2);color:var(--green);margin:3px}
+  .drop-zone{border:2px dashed var(--border);border-radius:14px;padding:30px 20px;text-align:center;cursor:pointer;transition:all 0.2s}
+  .drop-zone:hover,.drop-zone.over{border-color:var(--green);background:var(--green-glow)}
+  .drop-zone svg{width:30px;height:30px;stroke:var(--text2);fill:none;stroke-width:1.5;margin-bottom:10px}
+  .drop-zone p{font-size:14px;color:var(--text2);margin-bottom:3px}
+  .drop-zone span{font-size:12px;color:var(--text2);opacity:0.6}
+  .prog-wrap{height:3px;background:var(--bg3);border-radius:2px;margin-top:10px;overflow:hidden;display:none}
+  .prog-wrap.show{display:block}
+  .prog-fill{height:100%;background:var(--green);width:0%;transition:width 0.3s}
+  .event-flow{background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:14px;margin-top:12px;display:none}
+  .event-flow.show{display:block}
+  .event-flow-title{font-size:12px;color:var(--text2);margin-bottom:10px;font-weight:500}
+  .event-steps{display:flex;align-items:center;gap:0;overflow-x:auto;padding-bottom:4px}
+  .event-step{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:7px 11px;font-size:11px;white-space:nowrap;flex-shrink:0;text-align:center}
+  .event-step.active{border-color:var(--green);color:var(--green);background:var(--green-glow)}
+  .event-step.done{border-color:rgba(0,196,140,0.3);color:var(--text2)}
+  .event-arrow{color:var(--text2);font-size:14px;margin:0 3px;flex-shrink:0}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .mitem{display:flex;align-items:center;gap:12px;padding:13px 15px;background:var(--bg3);border:1px solid var(--border);border-radius:12px;margin-bottom:9px;transition:border-color 0.2s}
+  .mitem:hover{border-color:rgba(0,196,140,0.2)}
+  .mitem-thumb{width:48px;height:36px;border-radius:6px;object-fit:cover;flex-shrink:0}
+  .minfo{flex:1}
+  .mtitle{font-size:14px;font-weight:500}
+  .mmeta{font-size:12px;color:var(--text2);margin-top:2px}
+  #edit-panel{display:none}
+  .empty{color:var(--text2);font-size:14px;padding:20px 0;grid-column:1/-1}
+</style>
+</head>
+<body>
 
-      nav {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 16px 28px;
-        border-bottom: 1px solid var(--border);
-        background: rgba(10, 14, 13, 0.96);
-        position: sticky;
-        top: 0;
-        z-index: 200;
-        backdrop-filter: blur(12px);
-      }
-      .logo {
-        font-family: "Syne", sans-serif;
-        font-weight: 800;
-        font-size: 21px;
-        color: var(--green);
-      }
-      .logo span {
-        color: var(--text);
-      }
-      .nav-tabs {
-        display: flex;
-        gap: 4px;
-      }
-      .nav-tab {
-        background: none;
-        border: none;
-        color: var(--text2);
-        font-family: "DM Sans", sans-serif;
-        font-size: 14px;
-        padding: 7px 15px;
-        border-radius: 8px;
-        cursor: pointer;
-        transition: all 0.2s;
-      }
-      .nav-tab:hover {
-        background: var(--bg3);
-        color: var(--text);
-      }
-      .nav-tab.active {
-        background: var(--green-glow);
-        color: var(--green);
-        border: 1px solid rgba(0, 196, 140, 0.2);
-      }
-      .dot {
-        width: 7px;
-        height: 7px;
-        border-radius: 50%;
-        background: var(--green);
-        display: inline-block;
-        margin-right: 5px;
-        animation: pulse 2s infinite;
-      }
-      @keyframes pulse {
-        0%,
-        100% {
-          opacity: 1;
-        }
-        50% {
-          opacity: 0.3;
-        }
-      }
+<div class="toast-container" id="toasts"></div>
 
-      .page {
-        display: none;
-        padding: 28px;
-        max-width: 1100px;
-        margin: 0 auto;
-        animation: fadeIn 0.25s ease;
-      }
-      .page.active {
-        display: block;
-      }
-      @keyframes fadeIn {
-        from {
-          opacity: 0;
-          transform: translateY(6px);
-        }
-        to {
-          opacity: 1;
-          transform: translateY(0);
-        }
-      }
-
-      .card {
-        background: var(--bg2);
-        border: 1px solid var(--border);
-        border-radius: 16px;
-        padding: 22px;
-        margin-bottom: 18px;
-      }
-      .card-title {
-        font-family: "Syne", sans-serif;
-        font-size: 16px;
-        font-weight: 600;
-        margin-bottom: 3px;
-      }
-      .card-sub {
-        font-size: 13px;
-        color: var(--text2);
-        margin-bottom: 16px;
-      }
-
-      label {
-        display: block;
-        font-size: 13px;
-        color: var(--text2);
-        margin-bottom: 5px;
-        margin-top: 13px;
-      }
-      input,
-      select,
-      textarea {
-        width: 100%;
-        background: var(--bg3);
-        border: 1px solid var(--border);
-        border-radius: 10px;
-        padding: 10px 13px;
-        font-family: "DM Sans", sans-serif;
-        font-size: 14px;
-        color: var(--text);
-        outline: none;
-        transition: border 0.2s;
-      }
-      input:focus,
-      select:focus,
-      textarea:focus {
-        border-color: var(--green);
-      }
-      textarea {
-        resize: vertical;
-        min-height: 70px;
-      }
-      select option {
-        background: var(--bg3);
-      }
-
-      .btn {
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        padding: 9px 18px;
-        border-radius: 10px;
-        font-family: "DM Sans", sans-serif;
-        font-size: 14px;
-        font-weight: 500;
-        cursor: pointer;
-        border: none;
-        transition: all 0.2s;
-      }
-      .btn-primary {
-        background: var(--green);
-        color: #000;
-        width: 100%;
-        margin-top: 16px;
-        font-size: 15px;
-        padding: 12px;
-        border-radius: 12px;
-        justify-content: center;
-      }
-      .btn-primary:hover {
-        background: var(--green-dark);
-      }
-      .btn-primary:disabled {
-        background: var(--bg3);
-        color: var(--text2);
-        cursor: not-allowed;
-      }
-      .btn-ghost {
-        background: var(--bg3);
-        color: var(--text);
-        border: 1px solid var(--border);
-      }
-      .btn-ghost:hover {
-        border-color: var(--green);
-        color: var(--green);
-      }
-      .btn-red {
-        background: rgba(255, 77, 106, 0.1);
-        color: var(--danger);
-        border: 1px solid rgba(255, 77, 106, 0.2);
-      }
-      .btn-red:hover {
-        background: rgba(255, 77, 106, 0.2);
-      }
-      .btn-purple {
-        background: rgba(167, 139, 250, 0.1);
-        color: var(--purple);
-        border: 1px solid rgba(167, 139, 250, 0.2);
-      }
-      .btn-purple:hover {
-        background: rgba(167, 139, 250, 0.2);
-      }
-      .btn-sm {
-        padding: 5px 11px;
-        font-size: 12px;
-        border-radius: 7px;
-      }
-      .btn-mic {
-        background: var(--bg3);
-        border: 1px solid var(--border);
-        color: var(--text2);
-        padding: 10px 13px;
-        border-radius: 10px;
-        cursor: pointer;
-        font-size: 18px;
-        transition: all 0.2s;
-      }
-      .btn-mic:hover {
-        border-color: var(--green);
-        color: var(--green);
-      }
-      .btn-mic.listening {
-        background: rgba(255, 77, 106, 0.15);
-        border-color: var(--danger);
-        color: var(--danger);
-        animation: micPulse 1s infinite;
-      }
-      @keyframes micPulse {
-        0%,
-        100% {
-          opacity: 1;
-        }
-        50% {
-          opacity: 0.6;
-        }
-      }
-
-      .status {
-        padding: 11px 15px;
-        border-radius: 10px;
-        font-size: 13px;
-        margin-top: 12px;
-        display: none;
-        line-height: 1.5;
-      }
-      .status.show {
-        display: block;
-      }
-      .status.success {
-        background: rgba(0, 196, 140, 0.1);
-        color: var(--green);
-        border: 1px solid rgba(0, 196, 140, 0.2);
-      }
-      .status.error {
-        background: rgba(255, 77, 106, 0.1);
-        color: var(--danger);
-        border: 1px solid rgba(255, 77, 106, 0.2);
-      }
-      .status.loading {
-        background: rgba(255, 184, 48, 0.08);
-        color: var(--amber);
-        border: 1px solid rgba(255, 184, 48, 0.2);
-      }
-
-      .badge {
-        display: inline-block;
-        font-family: monospace;
-        font-size: 11px;
-        padding: 3px 10px;
-        border-radius: 20px;
-        background: var(--bg3);
-        border: 1px solid var(--border);
-        color: var(--text2);
-        margin-bottom: 12px;
-      }
-      .badge.post {
-        border-color: rgba(0, 196, 140, 0.3);
-        color: var(--green);
-      }
-      .badge.get {
-        border-color: rgba(100, 160, 255, 0.3);
-        color: var(--blue);
-      }
-      .badge.put {
-        border-color: rgba(255, 184, 48, 0.3);
-        color: var(--amber);
-      }
-      .badge.del {
-        border-color: rgba(255, 77, 106, 0.3);
-        color: var(--danger);
-      }
-      .badge.speech {
-        border-color: rgba(167, 139, 250, 0.3);
-        color: var(--purple);
-      }
-
-      .stats {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 12px;
-        margin-bottom: 22px;
-      }
-      .stat {
-        background: var(--bg2);
-        border: 1px solid var(--border);
-        border-radius: 14px;
-        padding: 18px;
-      }
-      .stat-val {
-        font-family: "Syne", sans-serif;
-        font-size: 28px;
-        font-weight: 800;
-        color: var(--green);
-      }
-      .stat-label {
-        font-size: 12px;
-        color: var(--text2);
-        margin-top: 2px;
-      }
-
-      .page-header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        margin-bottom: 22px;
-        flex-wrap: wrap;
-        gap: 10px;
-      }
-      .page-header h1 {
-        font-family: "Syne", sans-serif;
-        font-size: 22px;
-        font-weight: 700;
-      }
-
-      .search-row {
-        display: flex;
-        gap: 10px;
-        margin-bottom: 20px;
-        align-items: center;
-      }
-      .search-wrap {
-        flex: 1;
-        position: relative;
-      }
-      .search-wrap input {
-        padding-left: 36px;
-      }
-      .search-icon {
-        position: absolute;
-        left: 12px;
-        top: 50%;
-        transform: translateY(-50%);
-        color: var(--text2);
-        font-size: 14px;
-        pointer-events: none;
-      }
-      .filter-select {
-        width: 160px;
-      }
-
-      .speech-panel {
-        background: linear-gradient(
-          135deg,
-          rgba(167, 139, 250, 0.08),
-          rgba(0, 196, 140, 0.05)
-        );
-        border: 1px solid rgba(167, 139, 250, 0.2);
-        border-radius: 14px;
-        padding: 18px;
-        margin-bottom: 20px;
-      }
-      .speech-panel-title {
-        font-family: "Syne", sans-serif;
-        font-size: 14px;
-        font-weight: 600;
-        color: var(--purple);
-        margin-bottom: 10px;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-      }
-      .speech-controls {
-        display: flex;
-        gap: 10px;
-        flex-wrap: wrap;
-        align-items: center;
-      }
-      .speech-status {
-        font-size: 13px;
-        color: var(--text2);
-        margin-top: 8px;
-        min-height: 20px;
-      }
-      .speech-status.speaking {
-        color: var(--purple);
-      }
-      .speech-status.listening {
-        color: var(--danger);
-      }
-      .speech-wave {
-        display: none;
-        align-items: center;
-        gap: 3px;
-        margin-left: 6px;
-      }
-      .speech-wave.show {
-        display: inline-flex;
-      }
-      .wave-bar {
-        width: 3px;
-        height: 14px;
-        background: var(--danger);
-        border-radius: 2px;
-        animation: wave 0.8s infinite ease-in-out;
-      }
-      .wave-bar:nth-child(2) {
-        animation-delay: 0.1s;
-        height: 20px;
-      }
-      .wave-bar:nth-child(3) {
-        animation-delay: 0.2s;
-      }
-      .wave-bar:nth-child(4) {
-        animation-delay: 0.1s;
-        height: 20px;
-      }
-      .wave-bar:nth-child(5) {
-        animation-delay: 0s;
-      }
-      @keyframes wave {
-        0%,
-        100% {
-          transform: scaleY(0.5);
-        }
-        50% {
-          transform: scaleY(1);
-        }
-      }
-
-      /* VIDEO GRID WITH REAL THUMBNAILS */
-      .video-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-        gap: 16px;
-      }
-      .vcard {
-        background: var(--bg2);
-        border: 1px solid var(--border);
-        border-radius: 14px;
-        overflow: hidden;
-        transition:
-          border-color 0.2s,
-          transform 0.2s;
-        cursor: pointer;
-      }
-      .vcard:hover {
-        border-color: rgba(0, 196, 140, 0.35);
-        transform: translateY(-3px);
-      }
-      .vthumb {
-        height: 124px;
-        background: var(--bg3);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        position: relative;
-        overflow: hidden;
-      }
-      .vthumb img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        transition: transform 0.3s;
-      }
-      .vcard:hover .vthumb img {
-        transform: scale(1.05);
-      }
-      .vthumb-overlay {
-        position: absolute;
-        inset: 0;
-        background: rgba(0, 0, 0, 0.3);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        opacity: 0;
-        transition: opacity 0.2s;
-      }
-      .vcard:hover .vthumb-overlay {
-        opacity: 1;
-      }
-      .vthumb-play {
-        width: 42px;
-        height: 42px;
-        background: rgba(0, 196, 140, 0.9);
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
-      .vthumb-play svg {
-        width: 16px;
-        height: 16px;
-        fill: #000;
-        margin-left: 3px;
-      }
-      .vinfo {
-        padding: 12px;
-      }
-      .vtitle {
-        font-size: 13px;
-        font-weight: 500;
-        margin-bottom: 3px;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-      }
-      .vmeta {
-        font-size: 11px;
-        color: var(--text2);
-      }
-      .vactions {
-        padding: 8px 12px;
-        border-top: 1px solid var(--border);
-        display: flex;
-        gap: 5px;
-        align-items: center;
-      }
-      .like-btn {
-        background: none;
-        border: none;
-        cursor: pointer;
-        font-size: 13px;
-        color: var(--text2);
-        transition: all 0.2s;
-        padding: 3px 6px;
-        border-radius: 6px;
-      }
-      .like-btn:hover,
-      .like-btn.liked {
-        color: var(--danger);
-      }
-      .speak-btn {
-        background: none;
-        border: none;
-        cursor: pointer;
-        font-size: 13px;
-        color: var(--text2);
-        transition: all 0.2s;
-        padding: 3px 6px;
-        border-radius: 6px;
-      }
-      .speak-btn:hover {
-        color: var(--purple);
-      }
-
-      .skeleton {
-        background: var(--bg2);
-        border: 1px solid var(--border);
-        border-radius: 14px;
-        overflow: hidden;
-        animation: shimmer 1.5s infinite;
-      }
-      .skeleton-thumb {
-        height: 124px;
-        background: var(--bg3);
-      }
-      .skeleton-line {
-        height: 11px;
-        background: var(--bg3);
-        border-radius: 6px;
-        margin: 10px 12px 5px;
-      }
-      .skeleton-line.short {
-        width: 55%;
-      }
-      @keyframes shimmer {
-        0%,
-        100% {
-          opacity: 1;
-        }
-        50% {
-          opacity: 0.5;
-        }
-      }
-
-      /* MODAL */
-      .modal-overlay {
-        position: fixed;
-        inset: 0;
-        background: rgba(0, 0, 0, 0.88);
-        z-index: 500;
-        display: none;
-        align-items: center;
-        justify-content: center;
-        backdrop-filter: blur(6px);
-      }
-      .modal-overlay.show {
-        display: flex;
-      }
-      .modal {
-        background: var(--bg2);
-        border: 1px solid var(--border);
-        border-radius: 20px;
-        width: 90%;
-        max-width: 760px;
-        max-height: 90vh;
-        overflow-y: auto;
-      }
-      .modal-header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 20px 24px 0;
-      }
-      .modal-title {
-        font-family: "Syne", sans-serif;
-        font-size: 18px;
-        font-weight: 600;
-      }
-      .modal-close {
-        background: var(--bg3);
-        border: 1px solid var(--border);
-        border-radius: 8px;
-        color: var(--text2);
-        cursor: pointer;
-        padding: 6px 11px;
-        font-size: 15px;
-      }
-      .modal-close:hover {
-        color: var(--text);
-      }
-      .modal-body {
-        padding: 20px 24px 24px;
-      }
-      .video-player {
-        width: 100%;
-        border-radius: 12px;
-        background: #000;
-        margin-bottom: 14px;
-        aspect-ratio: 16/9;
-      }
-      .modal-meta {
-        display: flex;
-        gap: 8px;
-        flex-wrap: wrap;
-        margin-bottom: 14px;
-      }
-      .modal-badge {
-        font-size: 12px;
-        padding: 3px 10px;
-        border-radius: 20px;
-        background: var(--bg3);
-        color: var(--text2);
-      }
-
-      .speech-actions {
-        display: flex;
-        gap: 8px;
-        flex-wrap: wrap;
-        margin-bottom: 16px;
-        padding: 14px;
-        background: rgba(167, 139, 250, 0.06);
-        border: 1px solid rgba(167, 139, 250, 0.15);
-        border-radius: 12px;
-      }
-      .speech-action-title {
-        font-size: 12px;
-        color: var(--purple);
-        margin-bottom: 8px;
-        font-weight: 500;
-        width: 100%;
-      }
-      .speech-indicator {
-        font-size: 12px;
-        color: var(--purple);
-        margin-top: 6px;
-        width: 100%;
-        display: none;
-      }
-      .speech-indicator.show {
-        display: block;
-      }
-
-      .comments-section {
-        border-top: 1px solid var(--border);
-        padding-top: 16px;
-        margin-top: 14px;
-      }
-      .comment-title {
-        font-family: "Syne", sans-serif;
-        font-size: 14px;
-        font-weight: 600;
-        margin-bottom: 12px;
-      }
-      .comment-input-row {
-        display: flex;
-        gap: 10px;
-        margin-bottom: 14px;
-      }
-      .comment-input-row input {
-        flex: 1;
-      }
-      .comment-item {
-        padding: 10px 14px;
-        background: var(--bg3);
-        border-radius: 10px;
-        margin-bottom: 8px;
-        font-size: 13px;
-      }
-      .comment-user {
-        font-weight: 500;
-        color: var(--green);
-        font-size: 12px;
-        margin-bottom: 3px;
-      }
-      .comment-text {
-        color: var(--text);
-        line-height: 1.4;
-      }
-
-      .toast-container {
-        position: fixed;
-        bottom: 24px;
-        right: 24px;
-        z-index: 1000;
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-      }
-      .toast {
-        padding: 12px 18px;
-        border-radius: 12px;
-        font-size: 13px;
-        font-weight: 500;
-        animation: toastIn 0.3s ease;
-        max-width: 320px;
-      }
-      .toast.success {
-        background: rgba(0, 196, 140, 0.15);
-        color: var(--green);
-        border: 1px solid rgba(0, 196, 140, 0.3);
-      }
-      .toast.error {
-        background: rgba(255, 77, 106, 0.15);
-        color: var(--danger);
-        border: 1px solid rgba(255, 77, 106, 0.3);
-      }
-      .toast.info {
-        background: rgba(167, 139, 250, 0.12);
-        color: var(--purple);
-        border: 1px solid rgba(167, 139, 250, 0.25);
-      }
-      @keyframes toastIn {
-        from {
-          opacity: 0;
-          transform: translateX(20px);
-        }
-        to {
-          opacity: 1;
-          transform: translateX(0);
-        }
-      }
-
-      .security-badge {
-        display: inline-flex;
-        align-items: center;
-        gap: 5px;
-        font-size: 11px;
-        padding: 4px 10px;
-        border-radius: 20px;
-        background: rgba(0, 196, 140, 0.08);
-        border: 1px solid rgba(0, 196, 140, 0.2);
-        color: var(--green);
-        margin: 3px;
-      }
-
-      .drop-zone {
-        border: 2px dashed var(--border);
-        border-radius: 14px;
-        padding: 30px 20px;
-        text-align: center;
-        cursor: pointer;
-        transition: all 0.2s;
-      }
-      .drop-zone:hover,
-      .drop-zone.over {
-        border-color: var(--green);
-        background: var(--green-glow);
-      }
-      .drop-zone svg {
-        width: 30px;
-        height: 30px;
-        stroke: var(--text2);
-        fill: none;
-        stroke-width: 1.5;
-        margin-bottom: 10px;
-      }
-      .drop-zone p {
-        font-size: 14px;
-        color: var(--text2);
-        margin-bottom: 3px;
-      }
-      .drop-zone span {
-        font-size: 12px;
-        color: var(--text2);
-        opacity: 0.6;
-      }
-      .prog-wrap {
-        height: 3px;
-        background: var(--bg3);
-        border-radius: 2px;
-        margin-top: 10px;
-        overflow: hidden;
-        display: none;
-      }
-      .prog-wrap.show {
-        display: block;
-      }
-      .prog-fill {
-        height: 100%;
-        background: var(--green);
-        width: 0%;
-        transition: width 0.3s;
-      }
-
-      .event-flow {
-        background: var(--bg3);
-        border: 1px solid var(--border);
-        border-radius: 12px;
-        padding: 14px;
-        margin-top: 12px;
-        display: none;
-      }
-      .event-flow.show {
-        display: block;
-      }
-      .event-flow-title {
-        font-size: 12px;
-        color: var(--text2);
-        margin-bottom: 10px;
-        font-weight: 500;
-      }
-      .event-steps {
-        display: flex;
-        align-items: center;
-        gap: 0;
-        overflow-x: auto;
-        padding-bottom: 4px;
-      }
-      .event-step {
-        background: var(--bg2);
-        border: 1px solid var(--border);
-        border-radius: 8px;
-        padding: 7px 11px;
-        font-size: 11px;
-        white-space: nowrap;
-        flex-shrink: 0;
-        text-align: center;
-      }
-      .event-step.active {
-        border-color: var(--green);
-        color: var(--green);
-        background: var(--green-glow);
-      }
-      .event-step.done {
-        border-color: rgba(0, 196, 140, 0.3);
-        color: var(--text2);
-      }
-      .event-arrow {
-        color: var(--text2);
-        font-size: 14px;
-        margin: 0 3px;
-        flex-shrink: 0;
-      }
-
-      .grid2 {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 14px;
-      }
-      .mitem {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        padding: 13px 15px;
-        background: var(--bg3);
-        border: 1px solid var(--border);
-        border-radius: 12px;
-        margin-bottom: 9px;
-        transition: border-color 0.2s;
-      }
-      .mitem:hover {
-        border-color: rgba(0, 196, 140, 0.2);
-      }
-      .mitem-thumb {
-        width: 48px;
-        height: 36px;
-        border-radius: 6px;
-        object-fit: cover;
-        flex-shrink: 0;
-      }
-      .minfo {
-        flex: 1;
-      }
-      .mtitle {
-        font-size: 14px;
-        font-weight: 500;
-      }
-      .mmeta {
-        font-size: 12px;
-        color: var(--text2);
-        margin-top: 2px;
-      }
-      #edit-panel {
-        display: none;
-      }
-      .empty {
-        color: var(--text2);
-        font-size: 14px;
-        padding: 20px 0;
-        grid-column: 1/-1;
-      }
-    </style>
-  </head>
-  <body>
-    <div class="toast-container" id="toasts"></div>
-
-    <!-- VIDEO MODAL -->
-    <div
-      class="modal-overlay"
-      id="modal"
-      onclick="if (event.target === this) closeModal();"
-    >
-      <div class="modal">
-        <div class="modal-header">
-          <div class="modal-title" id="modal-title">Video</div>
-          <button class="modal-close" onclick="closeModal()">✕</button>
+<!-- VIDEO MODAL -->
+<div class="modal-overlay" id="modal" onclick="if(event.target===this)closeModal()">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="modal-title">Video</div>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <video class="video-player" id="modal-player" controls>
+        <source id="modal-src" src="" type="video/mp4">
+        Your browser does not support video playback.
+      </video>
+      <div class="modal-meta" id="modal-meta"></div>
+      <div class="speech-actions">
+        <div class="speech-action-title">🔊 Azure AI Speech — Text to Speech</div>
+        <button class="btn btn-sm btn-purple" onclick="speakTitle()">🔊 Read title</button>
+        <button class="btn btn-sm btn-purple" onclick="speakDescription()">📖 Read description</button>
+        <button class="btn btn-sm btn-purple" onclick="speakFullInfo()">🎓 Full intro</button>
+        <button class="btn btn-sm btn-ghost" onclick="stopSpeaking()">⏹ Stop</button>
+        <div class="speech-indicator" id="speech-indicator">🔊 Azure AI Speech is speaking...</div>
+      </div>
+      <div style="display:flex;gap:8px;margin-bottom:14px">
+        <button class="btn btn-sm btn-red" onclick="modalLike()">❤️ Like</button>
+        <button class="btn btn-sm btn-ghost">👁 <span id="modal-views">0</span> views</button>
+      </div>
+      <div class="comments-section">
+        <div class="comment-title">💬 Comments</div>
+        <div class="comment-input-row">
+          <input type="text" id="comment-input" placeholder="Add a comment...">
+          <button class="btn btn-sm btn-ghost" onclick="postComment()">Post</button>
         </div>
-        <div class="modal-body">
-          <video class="video-player" id="modal-player" controls>
-            <source id="modal-src" src="" type="video/mp4" />
-            Your browser does not support video playback.
-          </video>
-          <div class="modal-meta" id="modal-meta"></div>
-          <div class="speech-actions">
-            <div class="speech-action-title">
-              🔊 Azure AI Speech — Text to Speech
-            </div>
-            <button class="btn btn-sm btn-purple" onclick="speakTitle()">
-              🔊 Read title
-            </button>
-            <button class="btn btn-sm btn-purple" onclick="speakDescription()">
-              📖 Read description
-            </button>
-            <button class="btn btn-sm btn-purple" onclick="speakFullInfo()">
-              🎓 Full intro
-            </button>
-            <button class="btn btn-sm btn-ghost" onclick="stopSpeaking()">
-              ⏹ Stop
-            </button>
-            <div class="speech-indicator" id="speech-indicator">
-              🔊 Azure AI Speech is speaking...
-            </div>
-          </div>
-          <div style="display: flex; gap: 8px; margin-bottom: 14px">
-            <button class="btn btn-sm btn-red" onclick="modalLike()">
-              ❤️ Like
-            </button>
-            <button class="btn btn-sm btn-ghost">
-              👁 <span id="modal-views">0</span> views
-            </button>
-          </div>
-          <div class="comments-section">
-            <div class="comment-title">💬 Comments</div>
-            <div class="comment-input-row">
-              <input
-                type="text"
-                id="comment-input"
-                placeholder="Add a comment..."
-              />
-              <button class="btn btn-sm btn-ghost" onclick="postComment()">
-                Post
-              </button>
-            </div>
-            <div id="comments-list">
-              <div style="color: var(--text2); font-size: 13px">
-                No comments yet.
-              </div>
-            </div>
-          </div>
-        </div>
+        <div id="comments-list"><div style="color:var(--text2);font-size:13px">No comments yet.</div></div>
       </div>
     </div>
+  </div>
+</div>
 
-    <nav>
-      <div class="logo">edu<span>kate</span></div>
-      <div class="nav-tabs">
-        <button class="nav-tab active" onclick="showPage('feed', this)">
-          <span class="dot"></span>Feed
-        </button>
-        <button class="nav-tab" onclick="showPage('upload', this)">
-          Upload
-        </button>
-        <button class="nav-tab" onclick="showPage('manage', this)">
-          Manage
-        </button>
-        <button class="nav-tab" onclick="showPage('users', this)">Users</button>
-      </div>
-    </nav>
+<nav>
+  <div class="logo">edu<span>kate</span></div>
+  <div class="nav-tabs">
+    <button class="nav-tab active" onclick="showPage('feed',this)"><span class="dot"></span>Feed</button>
+    <button class="nav-tab" onclick="showPage('upload',this)">Upload</button>
+    <button class="nav-tab" onclick="showPage('manage',this)">Manage</button>
+    <button class="nav-tab" onclick="showPage('users',this)">Users</button>
+  </div>
+</nav>
 
-    <!-- FEED -->
-    <div class="page active" id="page-feed">
-      <div class="page-header">
-        <h1>Latest videos</h1>
-        <div style="display: flex; gap: 6px; flex-wrap: wrap">
-          <span class="badge get">GET /videos</span>
-          <span class="badge speech">Azure AI Speech</span>
-        </div>
-      </div>
-      <div class="stats">
-        <div class="stat">
-          <div class="stat-val" id="s-count">—</div>
-          <div class="stat-label">Total videos</div>
-        </div>
-        <div class="stat">
-          <div class="stat-val" id="s-api">—</div>
-          <div class="stat-label">API status</div>
-        </div>
-        <div class="stat">
-          <div class="stat-val" id="s-likes">0</div>
-          <div class="stat-label">Likes recorded</div>
-        </div>
-        <div class="stat">
-          <div class="stat-val">Azure</div>
-          <div class="stat-label">Hosted on</div>
-        </div>
-      </div>
-      <div class="speech-panel">
-        <div class="speech-panel-title">
-          🎤 Azure AI Speech
-          <span class="speech-wave" id="speech-wave">
-            <span class="wave-bar"></span><span class="wave-bar"></span
-            ><span class="wave-bar"></span> <span class="wave-bar"></span
-            ><span class="wave-bar"></span>
-          </span>
-        </div>
-        <div class="speech-controls">
-          <button class="btn-mic" id="mic-btn" onclick="toggleVoiceSearch()">
-            🎤 Voice search
-          </button>
-          <button class="btn btn-sm btn-purple" onclick="speakWelcome()">
-            🔊 Welcome
-          </button>
-          <button class="btn btn-sm btn-ghost" onclick="stopSpeaking()">
-            ⏹ Stop
-          </button>
-        </div>
-        <div class="speech-status" id="speech-status">
-          Click 🎤 to search by voice · Click 🔊 to hear Azure speak
-        </div>
-      </div>
-      <div class="search-row">
-        <div class="search-wrap" style="flex: 1">
-          <span class="search-icon">🔍</span>
-          <input
-            type="text"
-            id="search-input"
-            placeholder="Search videos..."
-            oninput="filterVideos()"
-          />
-        </div>
-        <button
-          class="btn-mic"
-          id="mic-btn2"
-          onclick="toggleVoiceSearch()"
-          title="Voice search"
-        >
-          🎤
-        </button>
-        <select class="filter-select" id="cat-filter" onchange="filterVideos()">
-          <option value="">All categories</option>
-          <option>Cloud computing</option>
-          <option>Databases</option>
-          <option>Networking</option>
-          <option>Security</option>
-          <option>DevOps</option>
-          <option>AI & Machine Learning</option>
+<!-- FEED -->
+<div class="page active" id="page-feed">
+  <div class="page-header">
+    <h1>Latest videos</h1>
+    <div style="display:flex;gap:6px;flex-wrap:wrap">
+      <span class="badge get">GET /api/videos</span>
+      <span class="badge speech">Azure AI Speech</span>
+    </div>
+  </div>
+  <div class="stats">
+    <div class="stat"><div class="stat-val" id="s-count">—</div><div class="stat-label">Total videos</div></div>
+    <div class="stat"><div class="stat-val" id="s-api">—</div><div class="stat-label">API status</div></div>
+    <div class="stat"><div class="stat-val" id="s-likes">0</div><div class="stat-label">Likes recorded</div></div>
+    <div class="stat"><div class="stat-val">Azure</div><div class="stat-label">Hosted on</div></div>
+  </div>
+  <div class="speech-panel">
+    <div class="speech-panel-title">🎤 Azure AI Speech
+      <span class="speech-wave" id="speech-wave">
+        <span class="wave-bar"></span><span class="wave-bar"></span><span class="wave-bar"></span>
+        <span class="wave-bar"></span><span class="wave-bar"></span>
+      </span>
+    </div>
+    <div class="speech-controls">
+      <button class="btn-mic" id="mic-btn" onclick="toggleVoiceSearch()">🎤 Voice search</button>
+      <button class="btn btn-sm btn-purple" onclick="speakWelcome()">🔊 Welcome</button>
+      <button class="btn btn-sm btn-ghost" onclick="stopSpeaking()">⏹ Stop</button>
+    </div>
+    <div class="speech-status" id="speech-status">Click 🎤 to search by voice · Click 🔊 to hear Azure speak</div>
+  </div>
+  <div class="search-row">
+    <div class="search-wrap" style="flex:1">
+      <span class="search-icon">🔍</span>
+      <input type="text" id="search-input" placeholder="Search videos..." oninput="filterVideos()">
+    </div>
+    <select class="filter-select" id="cat-filter" onchange="filterVideos()">
+      <option value="">All categories</option>
+      <option>Cloud computing</option>
+      <option>Databases</option>
+      <option>Networking</option>
+      <option>Security</option>
+      <option>DevOps</option>
+      <option>AI & Machine Learning</option>
+    </select>
+  </div>
+  <div class="video-grid" id="feed-grid">
+    <div class="skeleton"><div class="skeleton-thumb"></div><div class="skeleton-line"></div><div class="skeleton-line short"></div></div>
+    <div class="skeleton"><div class="skeleton-thumb"></div><div class="skeleton-line"></div><div class="skeleton-line short"></div></div>
+    <div class="skeleton"><div class="skeleton-thumb"></div><div class="skeleton-line"></div><div class="skeleton-line short"></div></div>
+  </div>
+  <div class="status" id="feed-status"></div>
+  <button class="btn btn-ghost" style="width:100%;margin-top:16px" onclick="loadFeed()">↻ Refresh feed</button>
+</div>
+
+<!-- UPLOAD -->
+<div class="page" id="page-upload">
+  <div class="page-header">
+    <h1>Upload video</h1>
+    <div style="display:flex;gap:6px;flex-wrap:wrap">
+      <span class="badge post">POST /api/videos</span>
+      <span class="badge speech">Event Grid</span>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">🔒 Security features active</div>
+    <div>
+      <span class="security-badge">✓ Input validation</span>
+      <span class="security-badge">✓ HTTPS only</span>
+      <span class="security-badge">✓ CORS protected</span>
+      <span class="security-badge">✓ Azure blob auth</span>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">Upload a new video</div>
+    <div class="card-sub">Step 1: Upload file to Azure Blob Storage → Step 2: Fill in details below</div>
+    <div style="background:var(--bg3);border-radius:12px;padding:14px;margin-bottom:14px">
+      <p style="font-size:13px;font-weight:500;margin-bottom:8px">Step 1 — Upload file to Azure Blob Storage</p>
+      <p style="font-size:12px;color:var(--text2)">Portal → Storage Account → videosedukate → Containers → videos → Upload</p>
+      <p style="font-size:12px;color:var(--green);font-family:monospace;margin-top:6px">https://videosedukate.blob.core.windows.net/videos/YOUR-FILENAME.mp4</p>
+    </div>
+    <label>Title *</label>
+    <input type="text" id="u-title" placeholder="e.g. Introduction to Azure Cloud">
+    <label>User ID *</label>
+    <input type="number" id="u-uid" value="1">
+    <label>Blob Storage URL * (paste after uploading)</label>
+    <input type="text" id="u-blob" placeholder="https://videosedukate.blob.core.windows.net/videos/myvideo.mp4">
+    <label>Thumbnail URL (optional — leave blank for auto)</label>
+    <input type="text" id="u-thumb" placeholder="Leave blank for auto thumbnail">
+    <label>Description</label>
+    <textarea id="u-desc" placeholder="What will viewers learn?"></textarea>
+    <div class="grid2">
+      <div>
+        <label>Category</label>
+        <select id="u-cat">
+          <option>Cloud computing</option><option>Databases</option><option>Networking</option>
+          <option>Security</option><option>DevOps</option><option>AI & Machine Learning</option>
         </select>
       </div>
-      <div class="video-grid" id="feed-grid">
-        <div class="skeleton">
-          <div class="skeleton-thumb"></div>
-          <div class="skeleton-line"></div>
-          <div class="skeleton-line short"></div>
-        </div>
-        <div class="skeleton">
-          <div class="skeleton-thumb"></div>
-          <div class="skeleton-line"></div>
-          <div class="skeleton-line short"></div>
-        </div>
-        <div class="skeleton">
-          <div class="skeleton-thumb"></div>
-          <div class="skeleton-line"></div>
-          <div class="skeleton-line short"></div>
-        </div>
-        <div class="skeleton">
-          <div class="skeleton-thumb"></div>
-          <div class="skeleton-line"></div>
-          <div class="skeleton-line short"></div>
-        </div>
-      </div>
-      <div class="status" id="feed-status"></div>
-      <button
-        class="btn btn-ghost"
-        style="width: 100%; margin-top: 16px"
-        onclick="loadFeed()"
-      >
-        ↻ Refresh feed
-      </button>
-    </div>
-
-    <!-- UPLOAD -->
-    <div class="page" id="page-upload">
-      <div class="page-header">
-        <h1>Upload video</h1>
-        <div style="display: flex; gap: 6px; flex-wrap: wrap">
-          <span class="badge post">POST /videos</span>
-          <span class="badge speech">Event Grid</span>
-        </div>
-      </div>
-      <div class="card">
-        <div class="card-title">🔒 Security features active</div>
-        <div>
-          <span class="security-badge">✓ Input validation</span>
-          <span class="security-badge">✓ HTTPS only</span>
-          <span class="security-badge">✓ URL sanitisation</span>
-          <span class="security-badge">✓ Azure blob auth</span>
-        </div>
-      </div>
-      <div class="card">
-        <div class="card-title">Upload a new video</div>
-        <div class="card-sub">
-          First upload your video file to Azure Blob Storage, then paste the URL
-          here
-        </div>
-
-        <!-- STEP 1 -->
-        <div
-          style="
-            background: var(--bg3);
-            border-radius: 12px;
-            padding: 14px;
-            margin-bottom: 14px;
-          "
-        >
-          <p style="font-size: 13px; font-weight: 500; margin-bottom: 8px">
-            Step 1 — Upload file to Azure Blob Storage
-          </p>
-          <p style="font-size: 12px; color: var(--text2); margin-bottom: 10px">
-            Portal → Storage Account → videosedukate → Containers → videos →
-            Upload
-          </p>
-          <p style="font-size: 12px; color: var(--text2)">
-            Your blob URL will be:
-          </p>
-          <p
-            style="
-              font-size: 12px;
-              color: var(--green);
-              font-family: monospace;
-              margin-top: 4px;
-            "
-          >
-            https://videosedukate.blob.core.windows.net/videos/YOUR-FILENAME.mp4
-          </p>
-        </div>
-
-        <!-- STEP 2 -->
-        <p style="font-size: 13px; font-weight: 500; margin-bottom: 12px">
-          Step 2 — Fill in the details below
-        </p>
-
-        <label>Title *</label>
-        <input
-          type="text"
-          id="u-title"
-          placeholder="e.g. Introduction to Azure Cloud"
-        />
-
-        <label>User ID *</label>
-        <input type="number" id="u-uid" value="1" />
-
-        <label>Blob Storage URL * (paste after uploading)</label>
-        <input
-          type="text"
-          id="u-blob"
-          placeholder="https://videosedukate.blob.core.windows.net/videos/myvideo.mp4"
-        />
-
-        <label>Thumbnail URL (optional — leave blank for auto)</label>
-        <input
-          type="text"
-          id="u-thumb"
-          placeholder="Leave blank — auto thumbnail will be used"
-        />
-
-        <label>Description</label>
-        <textarea id="u-desc" placeholder="What will viewers learn?"></textarea>
-
-        <div class="grid2">
-          <div>
-            <label>Category</label>
-            <select id="u-cat">
-              <option>Cloud computing</option>
-              <option>Databases</option>
-              <option>Networking</option>
-              <option>Security</option>
-              <option>DevOps</option>
-              <option>AI & Machine Learning</option>
-            </select>
-          </div>
-          <div>
-            <label>Status</label>
-            <select id="u-status">
-              <option value="published">Published</option>
-              <option value="processing">Processing</option>
-              <option value="private">Private</option>
-            </select>
-          </div>
-        </div>
-
-        <div class="prog-wrap" id="prog">
-          <div class="prog-fill" id="fill"></div>
-        </div>
-        <div class="event-flow" id="event-flow">
-          <div class="event-flow-title">
-            ⚡ Azure Event Grid — live event flow
-          </div>
-          <div class="event-steps">
-            <div class="event-step" id="ev1">📤 Upload</div>
-            <div class="event-arrow">→</div>
-            <div class="event-step" id="ev2">💾 Blob</div>
-            <div class="event-arrow">→</div>
-            <div class="event-step" id="ev3">⚡ Event Grid</div>
-            <div class="event-arrow">→</div>
-            <div class="event-step" id="ev4">⚙️ Logic App</div>
-            <div class="event-arrow">→</div>
-            <div class="event-step" id="ev5">🗄️ SQL+Cosmos</div>
-            <div class="event-arrow">→</div>
-            <div class="event-step" id="ev6">✅ Live</div>
-          </div>
-        </div>
-
-        <button class="btn btn-primary" id="u-btn" onclick="doUpload()">
-          Upload video →
-        </button>
-        <div class="status" id="u-msg"></div>
-      </div>
-    </div>
-
-    <!-- MANAGE -->
-    <div class="page" id="page-manage">
-      <div class="page-header">
-        <h1>Manage videos</h1>
-        <div style="display: flex; gap: 6px; flex-wrap: wrap">
-          <span class="badge put">PUT /videos</span>
-          <span class="badge del">DELETE /videos</span>
-        </div>
-      </div>
-      <div class="card">
-        <div class="card-title">Your videos</div>
-        <div class="card-sub">
-          Edit or delete — updates Azure SQL Database in real time
-        </div>
-        <div id="manage-list"><div class="empty">Loading...</div></div>
-        <div class="status" id="m-status"></div>
-        <button
-          class="btn btn-ghost"
-          style="width: 100%; margin-top: 12px"
-          onclick="loadManage()"
-        >
-          ↻ Refresh
-        </button>
-      </div>
-      <div class="card" id="edit-panel">
-        <div class="card-title">
-          Edit video
-          <span
-            id="edit-lbl"
-            style="font-size: 13px; font-weight: 400; color: var(--text2)"
-          ></span>
-        </div>
-        <label>Title</label><input type="text" id="e-title" />
-        <label>Description</label><input type="text" id="e-desc" />
-        <div class="grid2">
-          <div>
-            <label>Status</label>
-            <select id="e-status">
-              <option value="published">Published</option>
-              <option value="processing">Processing</option>
-              <option value="private">Private</option>
-            </select>
-          </div>
-          <div>
-            <label>Category</label>
-            <select id="e-cat">
-              <option>Cloud computing</option>
-              <option>Databases</option>
-              <option>Networking</option>
-              <option>Security</option>
-              <option>DevOps</option>
-            </select>
-          </div>
-        </div>
-        <button class="btn btn-primary" onclick="doEdit()">
-          Save changes (PUT) →
-        </button>
-        <div class="status" id="e-msg"></div>
-      </div>
-    </div>
-
-    <!-- USERS -->
-    <div class="page" id="page-users">
-      <div class="page-header">
-        <h1>Users & Interactions</h1>
-        <div style="display: flex; gap: 6px; flex-wrap: wrap">
-          <span class="badge post">POST /users</span>
-          <span class="badge post">POST /interactions</span>
-        </div>
-      </div>
-      <div class="card">
-        <div class="card-title">Register new user</div>
-        <div class="card-sub">
-          Creates a row in Azure SQL Database → Users table
-        </div>
-        <label>Username *</label
-        ><input type="text" id="r-user" placeholder="tanha_sarani" />
-        <label>Email *</label
-        ><input type="email" id="r-email" placeholder="tanha@ulster.ac.uk" />
-        <label>Password *</label
-        ><input type="password" id="r-pass" placeholder="Min 8 characters" />
-        <label>Role</label>
-        <select id="r-role">
-          <option value="Viewer">Viewer</option>
-          <option value="Creator">Creator</option>
-          <option value="Admin">Admin</option>
+      <div>
+        <label>Status</label>
+        <select id="u-status">
+          <option value="published">Published</option>
+          <option value="processing">Processing</option>
+          <option value="private">Private</option>
         </select>
-        <button class="btn btn-primary" onclick="doRegister()">
-          Create account →
-        </button>
-        <div class="status" id="r-msg"></div>
-      </div>
-      <div class="card">
-        <div class="card-title">Record interaction</div>
-        <div class="card-sub">Saves to Cosmos DB → interactions container</div>
-        <label>Video ID</label
-        ><input type="text" id="i-vid" placeholder="e.g. 12" />
-        <label>User ID</label
-        ><input type="text" id="i-uid" placeholder="e.g. 1" />
-        <label>Type</label>
-        <select id="i-type">
-          <option value="like">Like</option>
-          <option value="view">View</option>
-          <option value="comment">Comment</option>
-        </select>
-        <button class="btn btn-primary" onclick="doInteraction()">
-          Record interaction →
-        </button>
-        <div class="status" id="i-msg"></div>
       </div>
     </div>
+    <div class="prog-wrap" id="prog"><div class="prog-fill" id="fill"></div></div>
+    <div class="event-flow" id="event-flow">
+      <div class="event-flow-title">⚡ Azure Event Grid — live event flow</div>
+      <div class="event-steps">
+        <div class="event-step" id="ev1">📤 Upload</div><div class="event-arrow">→</div>
+        <div class="event-step" id="ev2">💾 Blob</div><div class="event-arrow">→</div>
+        <div class="event-step" id="ev3">⚡ Event Grid</div><div class="event-arrow">→</div>
+        <div class="event-step" id="ev4">⚙️ Logic App</div><div class="event-arrow">→</div>
+        <div class="event-step" id="ev5">🗄️ SQL+Cosmos</div><div class="event-arrow">→</div>
+        <div class="event-step" id="ev6">✅ Live</div>
+      </div>
+    </div>
+    <button class="btn btn-primary" id="u-btn" onclick="doUpload()">Upload video →</button>
+    <div class="status" id="u-msg"></div>
+  </div>
+</div>
 
-    <script>
-      // ════════════════════════════
-      // AZURE AI SPEECH
-      // ════════════════════════════
-      const SPEECH_KEY =
-        "7bO8ra1zFDksYDxEZ3uAF60XozcJXyiTgBeVFEhXzOLcUXVodPXKJQQJ99CEACPV0roXJ3w3AAAYACOG6Lgj";
-      const SPEECH_REGION = "germanywestcentral";
-      let speechSynthesizer = null;
-      let speechRecognizer = null;
-      let isListening = false;
+<!-- MANAGE -->
+<div class="page" id="page-manage">
+  <div class="page-header">
+    <h1>Manage videos</h1>
+    <div style="display:flex;gap:6px;flex-wrap:wrap">
+      <span class="badge put">PUT /api/videos</span>
+      <span class="badge del">DELETE /api/videos/:id</span>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">Your videos</div>
+    <div class="card-sub">Edit or delete — updates Azure SQL Database in real time</div>
+    <div id="manage-list"><div class="empty">Loading...</div></div>
+    <div class="status" id="m-status"></div>
+    <button class="btn btn-ghost" style="width:100%;margin-top:12px" onclick="loadManage()">↻ Refresh</button>
+  </div>
+  <div class="card" id="edit-panel">
+    <div class="card-title">Edit video <span id="edit-lbl" style="font-size:13px;font-weight:400;color:var(--text2)"></span></div>
+    <label>Title</label><input type="text" id="e-title">
+    <label>Description</label><input type="text" id="e-desc">
+    <div class="grid2">
+      <div><label>Status</label>
+        <select id="e-status"><option value="published">Published</option><option value="processing">Processing</option><option value="private">Private</option></select>
+      </div>
+      <div><label>Category</label>
+        <select id="e-cat"><option>Cloud computing</option><option>Databases</option><option>Networking</option><option>Security</option><option>DevOps</option></select>
+      </div>
+    </div>
+    <button class="btn btn-primary" onclick="doEdit()">Save changes (PUT) →</button>
+    <div class="status" id="e-msg"></div>
+  </div>
+</div>
 
-      // ════════════════════════════
-      // LOGIC APP URLS
-      // ════════════════════════════
-      const PROXY = "";
-      const RAW = {
-        POST_VIDEO:
-          "https://prod-30.germanywestcentral.logic.azure.com:443/workflows/eb420e3876224ab6b51607918f79e7f4/triggers/When_an_HTTP_request_is_received/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2FWhen_an_HTTP_request_is_received%2Frun&sv=1.0&sig=ydkchJbl73pXFw5D4AjMxAFXk_es585T5Wp5Y3bp6qc",
-        GET_VIDEOS:
-          "https://prod-24.germanywestcentral.logic.azure.com:443/workflows/e1e73bb28bbd48b49091d027025f3e6d/triggers/When_an_HTTP_request_is_received/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2FWhen_an_HTTP_request_is_received%2Frun&sv=1.0&sig=ZrU5Zd6uxaaAgPk0D5ZowFeDmMrKuksyCtXAMZbNMnU",
-        GET_BY_ID:
-          "https://prod-14.germanywestcentral.logic.azure.com:443/workflows/b4bb8816fdc04b90a23cc1f071b8f6cf/triggers/When_an_HTTP_request_is_received/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2FWhen_an_HTTP_request_is_received%2Frun&sv=1.0&sig=5sK37ppXz-asspTA3WgtVyLmARron1OEvOeZATfUBy8",
-        PUT_VIDEO:
-          "https://prod-21.germanywestcentral.logic.azure.com:443/workflows/48a951b0fb204364bb0d057598664f7c/triggers/When_an_HTTP_request_is_received/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2FWhen_an_HTTP_request_is_received%2Frun&sv=1.0&sig=ugFc8nlCTpNDW86RjYeZdwkDfrcSwFPOcG4EuB8C1o8",
-        DELETE_VIDEO:
-          "https://prod-04.germanywestcentral.logic.azure.com:443/workflows/5e72ccfcbdb042c9b3b0ac228b9101b3/triggers/When_an_HTTP_request_is_received/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2FWhen_an_HTTP_request_is_received%2Frun&sv=1.0&sig=3WwNndU1LFhLystDESV-15V1ffX-12YbGJ_sEpYpLKo",
-        POST_USER:
-          "https://prod-18.germanywestcentral.logic.azure.com:443/workflows/229c1a8b0b4441b4890cbbbbc34f0c97/triggers/When_an_HTTP_request_is_received/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2FWhen_an_HTTP_request_is_received%2Frun&sv=1.0&sig=XoIfP-yJre4ZF7qarPtYxD-RZdxBpe6pCbnAYzDhQ5I",
-        POST_INTERACTION:
-          "https://prod-13.germanywestcentral.logic.azure.com:443/workflows/2dec047a8f034434bb6d550ae238ef74/triggers/When_an_HTTP_request_is_received/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2FWhen_an_HTTP_request_is_received%2Frun&sv=1.0&sig=DJnS_894mPQsTBnhc1wnpmZp4Y-lGUZMyXlqH_t_Bos",
-      };
-      const API = RAW;
+<!-- USERS -->
+<div class="page" id="page-users">
+  <div class="page-header">
+    <h1>Users & Interactions</h1>
+    <div style="display:flex;gap:6px;flex-wrap:wrap">
+      <span class="badge post">POST /api/users</span>
+      <span class="badge post">POST /api/interactions</span>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">Register new user</div>
+    <div class="card-sub">Creates a row in Azure SQL Database → Users table</div>
+    <label>Username *</label><input type="text" id="r-user" placeholder="tanha_sarani">
+    <label>Email *</label><input type="email" id="r-email" placeholder="tanha@ulster.ac.uk">
+    <label>Password *</label><input type="password" id="r-pass" placeholder="Min 8 characters">
+    <label>Role</label>
+    <select id="r-role"><option value="Viewer">Viewer</option><option value="Creator">Creator</option><option value="Admin">Admin</option></select>
+    <button class="btn btn-primary" onclick="doRegister()">Create account →</button>
+    <div class="status" id="r-msg"></div>
+  </div>
+  <div class="card">
+    <div class="card-title">Record interaction</div>
+    <div class="card-sub">Saves to Cosmos DB → interactions container</div>
+    <label>Video ID</label><input type="text" id="i-vid" placeholder="e.g. 12">
+    <label>User ID</label><input type="text" id="i-uid" placeholder="e.g. 1">
+    <label>Type</label>
+    <select id="i-type"><option value="like">Like</option><option value="view">View</option><option value="comment">Comment</option></select>
+    <button class="btn btn-primary" onclick="doInteraction()">Record interaction →</button>
+    <div class="status" id="i-msg"></div>
+  </div>
+</div>
 
-      // ════════════════════════════
-      // STATE
-      // ════════════════════════════
-      let allVideos = [];
-      let currentVideo = null;
-      let localComments = {};
-      let localLikes = {};
+<script>
+// ════════════════════════════
+// AZURE AI SPEECH
+// ════════════════════════════
+const SPEECH_KEY    = 'D1C9EiHZhkXM66qgwTs9z9yj1mt4CBAAsLPJx1vaubN8azkOvvt2JQQJ99CEACPV0roXJ3w3AAAYACOGkfzK';
+const SPEECH_REGION = 'germanywestcentral';
+let speechSynthesizer = null;
+let speechRecognizer  = null;
+let isListening = false;
 
-      // ════════════════════════════
-      // NAV
-      // ════════════════════════════
-      function showPage(id, btn) {
-        document
-          .querySelectorAll(".page")
-          .forEach((p) => p.classList.remove("active"));
-        document
-          .querySelectorAll(".nav-tab")
-          .forEach((b) => b.classList.remove("active"));
-        document.getElementById("page-" + id).classList.add("active");
-        btn.classList.add("active");
-        if (id === "feed") loadFeed();
-        if (id === "manage") loadManage();
-      }
+// ════════════════════════════
+// LOCAL API ROUTES
+// These go through server.js which proxies to Logic Apps
+// No CORS issues because server.js is on same origin!
+// ════════════════════════════
+const API = {
+  GET_VIDEOS:       '/api/videos',
+  GET_BY_ID:        '/api/videos/',
+  POST_VIDEO:       '/api/videos',
+  PUT_VIDEO:        '/api/videos',
+  DELETE_VIDEO:     '/api/videos/',
+  POST_USER:        '/api/users',
+  POST_INTERACTION: '/api/interactions'
+};
 
-      function toast(msg, type = "info") {
-        const c = document.getElementById("toasts");
-        const t = document.createElement("div");
-        t.className = "toast " + type;
-        t.textContent = msg;
-        c.appendChild(t);
-        setTimeout(() => t.remove(), 3500);
-      }
+// ════════════════════════════
+// STATE
+// ════════════════════════════
+let allVideos    = [];
+let currentVideo = null;
+let localComments= {};
+let localLikes   = {};
 
-      function setStatus(id, msg, type) {
-        const el = document.getElementById(id);
-        if (!el) return;
-        el.textContent = msg;
-        el.className = "status show " + type;
-        if (type === "success")
-          setTimeout(() => el.classList.remove("show"), 4000);
-      }
+// ════════════════════════════
+// NAV
+// ════════════════════════════
+function showPage(id, btn) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(b => b.classList.remove('active'));
+  document.getElementById('page-' + id).classList.add('active');
+  btn.classList.add('active');
+  if (id === 'feed') loadFeed();
+  if (id === 'manage') loadManage();
+}
 
-      function extractVideos(data) {
-        return (
-          data?.ResultSets?.Table1 ||
-          data?.resultSets?.Table1 ||
-          data?.value ||
-          (Array.isArray(data) ? data : [])
-        );
-      }
+function toast(msg, type='info') {
+  const c = document.getElementById('toasts');
+  const t = document.createElement('div');
+  t.className = 'toast ' + type;
+  t.textContent = msg;
+  c.appendChild(t);
+  setTimeout(() => t.remove(), 3500);
+}
 
-      function sanitise(str) {
-        return String(str || "").replace(
-          /[<>'"&]/g,
-          (c) =>
-            ({
-              "<": "&lt;",
-              ">": "&gt;",
-              "'": "&#39;",
-              '"': "&quot;",
-              "&": "&amp;",
-            })[c],
-        );
-      }
+function setStatus(id, msg, type) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.textContent = msg;
+  el.className = 'status show ' + type;
+  if (type === 'success') setTimeout(() => el.classList.remove('show'), 4000);
+}
 
-      // ════════════════════════════
-      // AZURE SPEECH — TTS
-      // ════════════════════════════
-      function getSpeechConfig() {
-        if (typeof SpeechSDK === "undefined") {
-          toast("Speech SDK loading...", "info");
-          return null;
-        }
-        const config = SpeechSDK.SpeechConfig.fromSubscription(
-          SPEECH_KEY,
-          SPEECH_REGION,
-        );
-        config.speechSynthesisVoiceName = "en-GB-SoniaNeural";
-        return config;
-      }
+function extractVideos(data) {
+  return data?.ResultSets?.Table1 || data?.resultSets?.Table1 || data?.value || (Array.isArray(data) ? data : []);
+}
 
-      function speakText(text) {
-        stopSpeaking();
-        const config = getSpeechConfig();
-        if (!config) return;
-        const synth = new SpeechSDK.SpeechSynthesizer(config);
-        speechSynthesizer = synth;
-        document.getElementById("speech-status").textContent =
-          "🔊 Azure AI Speech is speaking...";
-        document.getElementById("speech-status").className =
-          "speech-status speaking";
-        const ind = document.getElementById("speech-indicator");
-        if (ind) {
-          ind.textContent = "🔊 " + text.substring(0, 50) + "...";
-          ind.classList.add("show");
-        }
-        toast("🔊 Azure speaking...", "info");
-        synth.speakTextAsync(
-          text,
-          () => {
-            document.getElementById("speech-status").textContent =
-              "✓ Speech complete";
-            document.getElementById("speech-status").className =
-              "speech-status";
-            if (ind) ind.classList.remove("show");
-            synth.close();
-          },
-          (err) => {
-            document.getElementById("speech-status").textContent =
-              "Speech error";
-            if (ind) ind.classList.remove("show");
-            synth.close();
-          },
-        );
-      }
+function sanitise(str) {
+  return String(str||'').replace(/[<>'"&]/g, c=>({'<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;','&':'&amp;'}[c]));
+}
 
-      function stopSpeaking() {
-        if (speechSynthesizer) {
-          try {
-            speechSynthesizer.close();
-          } catch (e) {}
-          speechSynthesizer = null;
-        }
-        const el = document.getElementById("speech-status");
-        if (el) {
-          el.textContent =
-            "Click 🎤 to search by voice · Click 🔊 to hear Azure speak";
-          el.className = "speech-status";
-        }
-        const ind = document.getElementById("speech-indicator");
-        if (ind) ind.classList.remove("show");
-      }
+function getThumb(v) {
+  if (v.thumbnail_url && v.thumbnail_url !== 'NULL' && v.thumbnail_url !== '') return v.thumbnail_url;
+  return 'https://picsum.photos/seed/edu' + v.video_id + '/320/180';
+}
 
-      function speakWelcome() {
-        speakText(
-          "Welcome to Edukate. Your cloud-powered educational video platform built on Microsoft Azure. Browse and upload educational videos, like and comment on content, and discover new learning resources.",
-        );
-      }
-      function speakTitle() {
-        if (currentVideo)
-          speakText("Video title: " + (currentVideo.title || "Untitled"));
-      }
-      function speakDescription() {
-        if (currentVideo)
-          speakText(currentVideo.description || "No description available.");
-      }
-      function speakFullInfo() {
-        if (currentVideo)
-          speakText(
-            (currentVideo.title || "Untitled") +
-              ". Category: " +
-              (currentVideo.category || "general") +
-              ". " +
-              (currentVideo.description || "No description."),
-          );
-      }
+// ════════════════════════════
+// AZURE SPEECH — TTS
+// ════════════════════════════
+function getSpeechConfig() {
+  if (typeof SpeechSDK === 'undefined') { toast('Speech SDK loading...','info'); return null; }
+  const config = SpeechSDK.SpeechConfig.fromSubscription(SPEECH_KEY, SPEECH_REGION);
+  config.speechSynthesisVoiceName = 'en-GB-SoniaNeural';
+  return config;
+}
 
-      // ════════════════════════════
-      // AZURE SPEECH — STT
-      // ════════════════════════════
-      function toggleVoiceSearch() {
-        if (isListening) {
-          stopVoiceSearch();
-          return;
-        }
-        const config = getSpeechConfig();
-        if (!config) return;
-        const audioConfig = SpeechSDK.AudioConfig.fromDefaultMicrophoneInput();
-        speechRecognizer = new SpeechSDK.SpeechRecognizer(config, audioConfig);
-        isListening = true;
-        document.getElementById("mic-btn").classList.add("listening");
-        document.getElementById("speech-wave").classList.add("show");
-        document.getElementById("speech-status").textContent =
-          "🔴 Listening...";
-        document.getElementById("speech-status").className =
-          "speech-status listening";
-        toast("🎤 Azure Speech listening...", "info");
-        speechRecognizer.recognizeOnceAsync(
-          (result) => {
-            if (result.reason === SpeechSDK.ResultReason.RecognizedSpeech) {
-              const text = result.text.replace(/\.$/, "");
-              document.getElementById("search-input").value = text;
-              filterVideos();
-              document.getElementById("speech-status").textContent =
-                '✓ Heard: "' + text + '"';
-              document.getElementById("speech-status").className =
-                "speech-status";
-              toast('🎤 Searched: "' + text + '"', "success");
-            } else {
-              toast("Could not recognise — try again", "error");
-              document.getElementById("speech-status").textContent =
-                "Could not recognise — try again";
-              document.getElementById("speech-status").className =
-                "speech-status";
-            }
-            stopVoiceSearch();
-          },
-          (err) => {
-            toast("Mic error: " + err, "error");
-            stopVoiceSearch();
-          },
-        );
-      }
+function speakText(text) {
+  stopSpeaking();
+  const config = getSpeechConfig();
+  if (!config) return;
+  const synth = new SpeechSDK.SpeechSynthesizer(config);
+  speechSynthesizer = synth;
+  document.getElementById('speech-status').textContent = '🔊 Azure AI Speech is speaking...';
+  document.getElementById('speech-status').className = 'speech-status speaking';
+  const ind = document.getElementById('speech-indicator');
+  if (ind) { ind.textContent = '🔊 ' + text.substring(0,50) + '...'; ind.classList.add('show'); }
+  toast('🔊 Azure speaking...','info');
+  synth.speakTextAsync(text,
+    () => {
+      document.getElementById('speech-status').textContent = '✓ Speech complete';
+      document.getElementById('speech-status').className = 'speech-status';
+      if (ind) ind.classList.remove('show');
+      synth.close();
+    },
+    err => {
+      document.getElementById('speech-status').textContent = 'Speech error — check key';
+      if (ind) ind.classList.remove('show');
+      synth.close();
+    }
+  );
+}
 
-      function stopVoiceSearch() {
-        isListening = false;
-        if (speechRecognizer) {
-          try {
-            speechRecognizer.close();
-          } catch (e) {}
-          speechRecognizer = null;
-        }
-        document.getElementById("mic-btn").classList.remove("listening");
-        document.getElementById("speech-wave").classList.remove("show");
-      }
+function stopSpeaking() {
+  if (speechSynthesizer) { try { speechSynthesizer.close(); } catch(e){} speechSynthesizer = null; }
+  const el = document.getElementById('speech-status');
+  if (el) { el.textContent = 'Click 🎤 to search by voice · Click 🔊 to hear Azure speak'; el.className = 'speech-status'; }
+  const ind = document.getElementById('speech-indicator');
+  if (ind) ind.classList.remove('show');
+}
 
-      // ════════════════════════════
-      // FEED
-      // ════════════════════════════
-      async function loadFeed() {
-        document.getElementById("feed-grid").innerHTML = Array(4)
-          .fill(
-            `<div class="skeleton"><div class="skeleton-thumb"></div><div class="skeleton-line"></div><div class="skeleton-line short"></div></div>`,
-          )
-          .join("");
-        try {
-          const res = await fetch(API.GET_VIDEOS, { method: "GET" });
-          const data = await res.json();
-          allVideos = extractVideos(data);
-          document.getElementById("s-count").textContent = allVideos.length;
-          document.getElementById("s-api").textContent = "✓ Live";
-          renderVideos(allVideos);
-        } catch (e) {
-          setStatus("feed-status", "Could not load: " + e.message, "error");
-          document.getElementById("s-api").textContent = "Error";
-          document.getElementById("feed-grid").innerHTML =
-            '<div class="empty">Could not load videos.</div>';
-        }
-      }
+function speakWelcome() { speakText('Welcome to Edukate. Your cloud-powered educational video platform built on Microsoft Azure. Browse and upload educational videos, like and comment on content, and discover new learning resources.'); }
+function speakTitle() { if (currentVideo) speakText('Video title: ' + (currentVideo.title||'Untitled')); }
+function speakDescription() { if (currentVideo) speakText(currentVideo.description || 'No description available.'); }
+function speakFullInfo() { if (currentVideo) speakText((currentVideo.title||'Untitled') + '. Category: ' + (currentVideo.category||'general') + '. ' + (currentVideo.description||'No description.')); }
 
-      function getThumb(v) {
-        if (v.thumbnail_url && v.thumbnail_url !== "NULL")
-          return v.thumbnail_url;
-        return "https://picsum.photos/seed/edu" + v.video_id + "/320/180";
-      }
+// ════════════════════════════
+// AZURE SPEECH — STT
+// ════════════════════════════
+function toggleVoiceSearch() {
+  if (isListening) { stopVoiceSearch(); return; }
+  const config = getSpeechConfig();
+  if (!config) return;
+  const audioConfig = SpeechSDK.AudioConfig.fromDefaultMicrophoneInput();
+  speechRecognizer = new SpeechSDK.SpeechRecognizer(config, audioConfig);
+  isListening = true;
+  document.getElementById('mic-btn').classList.add('listening');
+  document.getElementById('speech-wave').classList.add('show');
+  document.getElementById('speech-status').textContent = '🔴 Listening... say a video title';
+  document.getElementById('speech-status').className = 'speech-status listening';
+  toast('🎤 Azure Speech listening...','info');
+  speechRecognizer.recognizeOnceAsync(result => {
+    if (result.reason === SpeechSDK.ResultReason.RecognizedSpeech) {
+      const text = result.text.replace(/\.$/, '');
+      document.getElementById('search-input').value = text;
+      filterVideos();
+      document.getElementById('speech-status').textContent = '✓ Heard: "' + text + '"';
+      document.getElementById('speech-status').className = 'speech-status';
+      toast('🎤 Searched: "' + text + '"','success');
+    } else {
+      toast('Could not recognise — try again','error');
+      document.getElementById('speech-status').textContent = 'Could not recognise — try again';
+      document.getElementById('speech-status').className = 'speech-status';
+    }
+    stopVoiceSearch();
+  }, err => { toast('Mic error: '+err,'error'); stopVoiceSearch(); });
+}
 
-      function renderVideos(videos) {
-        const grid = document.getElementById("feed-grid");
-        if (!videos.length) {
-          grid.innerHTML = '<div class="empty">No videos — upload one!</div>';
-          return;
-        }
-        grid.innerHTML = videos
-          .map(
-            (v) => `
+function stopVoiceSearch() {
+  isListening = false;
+  if (speechRecognizer) { try { speechRecognizer.close(); } catch(e){} speechRecognizer = null; }
+  document.getElementById('mic-btn').classList.remove('listening');
+  document.getElementById('speech-wave').classList.remove('show');
+}
+
+// ════════════════════════════
+// FEED — GET /api/videos
+// ════════════════════════════
+async function loadFeed() {
+  document.getElementById('feed-grid').innerHTML = Array(3).fill(`<div class="skeleton"><div class="skeleton-thumb"></div><div class="skeleton-line"></div><div class="skeleton-line short"></div></div>`).join('');
+  try {
+    const res = await fetch(API.GET_VIDEOS);
+    const data = await res.json();
+    allVideos = extractVideos(data);
+    document.getElementById('s-count').textContent = allVideos.length;
+    document.getElementById('s-api').textContent = '✓ Live';
+    renderVideos(allVideos);
+  } catch(e) {
+    setStatus('feed-status','Could not load videos: '+e.message+' — make sure server.js is running!','error');
+    document.getElementById('s-api').textContent = 'Error';
+    document.getElementById('feed-grid').innerHTML = '<div class="empty">Could not load — is server.js running? (node server.js)</div>';
+  }
+}
+
+function renderVideos(videos) {
+  const grid = document.getElementById('feed-grid');
+  if (!videos.length) { grid.innerHTML = '<div class="empty">No videos — upload one!</div>'; return; }
+  grid.innerHTML = videos.map(v => `
     <div class="vcard" onclick="openModal(${v.video_id})">
       <div class="vthumb">
         <img src="${getThumb(v)}" alt="${sanitise(v.title)}" onerror="this.src='https://picsum.photos/seed/edu${v.video_id}/320/180'">
@@ -1699,449 +598,306 @@
         </div>
       </div>
       <div class="vinfo">
-        <div class="vtitle" title="${sanitise(v.title || "")}">${sanitise(v.title || "Untitled")}</div>
-        <div class="vmeta">${sanitise(v.category || "—")} · ID: ${v.video_id}</div>
+        <div class="vtitle" title="${sanitise(v.title||'')}">${sanitise(v.title||'Untitled')}</div>
+        <div class="vmeta">${sanitise(v.category||'—')} · ID: ${v.video_id}</div>
       </div>
       <div class="vactions" onclick="event.stopPropagation()">
-        <button class="like-btn ${localLikes[v.video_id] ? "liked" : ""}" onclick="quickLike(${v.video_id})">
-          ${localLikes[v.video_id] ? "❤️" : "🤍"}
-        </button>
+        <button class="like-btn ${localLikes[v.video_id]?'liked':''}" onclick="quickLike(${v.video_id})">${localLikes[v.video_id]?'❤️':'🤍'}</button>
         <button class="speak-btn" onclick="speakVideoCard(${v.video_id})" title="Read aloud">🔊</button>
         <button class="btn btn-sm btn-red" style="margin-left:auto" onclick="quickDelete(${v.video_id})">Delete</button>
       </div>
     </div>
-  `,
-          )
-          .join("");
-      }
+  `).join('');
+}
 
-      function filterVideos() {
-        const q = document.getElementById("search-input").value.toLowerCase();
-        const cat = document.getElementById("cat-filter").value;
-        renderVideos(
-          allVideos.filter(
-            (v) =>
-              (!q || (v.title || "").toLowerCase().includes(q)) &&
-              (!cat || v.category === cat),
-          ),
-        );
-      }
+function filterVideos() {
+  const q = document.getElementById('search-input').value.toLowerCase();
+  const cat = document.getElementById('cat-filter').value;
+  renderVideos(allVideos.filter(v => (!q||(v.title||'').toLowerCase().includes(q)) && (!cat||v.category===cat)));
+}
 
-      function speakVideoCard(id) {
-        const v = allVideos.find((x) => x.video_id == id);
-        if (v)
-          speakText((v.title || "Untitled") + ". " + (v.description || ""));
-      }
+function speakVideoCard(id) {
+  const v = allVideos.find(x=>x.video_id==id);
+  if (v) speakText((v.title||'Untitled') + '. ' + (v.description||''));
+}
 
-      // ════════════════════════════
-      // MODAL
-      // ════════════════════════════
-      async function openModal(id) {
-        currentVideo = allVideos.find((x) => x.video_id == id) || {
-          video_id: id,
-        };
-        document.getElementById("modal").classList.add("show");
-        document.getElementById("modal-title").textContent =
-          currentVideo.title || "Video " + id;
-        document.getElementById("modal-meta").innerHTML = `
+// ════════════════════════════
+// MODAL
+// ════════════════════════════
+async function openModal(id) {
+  currentVideo = allVideos.find(x=>x.video_id==id) || {video_id:id};
+  document.getElementById('modal').classList.add('show');
+  document.getElementById('modal-title').textContent = currentVideo.title || 'Video ' + id;
+  document.getElementById('modal-meta').innerHTML = `
     <span class="modal-badge">ID: ${id}</span>
-    <span class="modal-badge">${sanitise(currentVideo.category || "—")}</span>
-    <span class="modal-badge">${sanitise(currentVideo.status || "published")}</span>
-    <span class="modal-badge">${sanitise(currentVideo.description || "No description")}</span>
+    <span class="modal-badge">${sanitise(currentVideo.category||'—')}</span>
+    <span class="modal-badge">${sanitise(currentVideo.status||'published')}</span>
+    <span class="modal-badge">${sanitise(currentVideo.description||'No description')}</span>
   `;
-        const player = document.getElementById("modal-player");
-        if (
-          currentVideo.blob_url &&
-          currentVideo.blob_url.startsWith("https://videosedukate")
-        ) {
-          document.getElementById("modal-src").src = currentVideo.blob_url;
-          player.load();
-        }
-        renderComments(id, localComments[id] || []);
-        await logInteraction(id, "1", "view");
-        document.getElementById("modal-views").textContent =
-          (parseInt(document.getElementById("modal-views").textContent) || 0) +
-          1;
-      }
+  const player = document.getElementById('modal-player');
+  if (currentVideo.blob_url && currentVideo.blob_url.startsWith('https://')) {
+    document.getElementById('modal-src').src = currentVideo.blob_url;
+    player.load();
+  }
+  renderComments(id, localComments[id]||[]);
+  await logInteraction(id,'1','view');
+  document.getElementById('modal-views').textContent = (parseInt(document.getElementById('modal-views').textContent)||0)+1;
+}
 
-      function closeModal() {
-        document.getElementById("modal").classList.remove("show");
-        document.getElementById("modal-player").pause();
-        stopSpeaking();
-        currentVideo = null;
-      }
+function closeModal() {
+  document.getElementById('modal').classList.remove('show');
+  document.getElementById('modal-player').pause();
+  stopSpeaking();
+  currentVideo = null;
+}
 
-      function renderComments(id, comments) {
-        const list = document.getElementById("comments-list");
-        if (!comments.length) {
-          list.innerHTML =
-            '<div style="color:var(--text2);font-size:13px">No comments yet. Be first!</div>';
-          return;
-        }
-        list.innerHTML = comments
-          .map(
-            (c) =>
-              `<div class="comment-item"><div class="comment-user">User ${c.uid}</div><div class="comment-text">${sanitise(c.text)}</div></div>`,
-          )
-          .join("");
-      }
+function renderComments(id, comments) {
+  const list = document.getElementById('comments-list');
+  if (!comments.length) { list.innerHTML = '<div style="color:var(--text2);font-size:13px">No comments yet. Be first!</div>'; return; }
+  list.innerHTML = comments.map(c=>`<div class="comment-item"><div class="comment-user">User ${c.uid}</div><div class="comment-text">${sanitise(c.text)}</div></div>`).join('');
+}
 
-      async function postComment() {
-        if (!currentVideo) return;
-        const input = document.getElementById("comment-input");
-        const text = input.value.trim();
-        if (!text) return;
-        const id = currentVideo.video_id;
-        if (!localComments[id]) localComments[id] = [];
-        localComments[id].push({ uid: 1, text });
-        renderComments(id, localComments[id]);
-        input.value = "";
-        await logInteraction(id, "1", "comment");
-        toast("Comment saved to Cosmos DB!", "success");
-      }
+async function postComment() {
+  if (!currentVideo) return;
+  const input = document.getElementById('comment-input');
+  const text = input.value.trim();
+  if (!text) return;
+  const id = currentVideo.video_id;
+  if (!localComments[id]) localComments[id]=[];
+  localComments[id].push({uid:1,text});
+  renderComments(id,localComments[id]);
+  input.value='';
+  await logInteraction(id,'1','comment');
+  toast('Comment saved to Cosmos DB!','success');
+}
 
-      async function modalLike() {
-        if (!currentVideo) return;
-        localLikes[currentVideo.video_id] =
-          (localLikes[currentVideo.video_id] || 0) + 1;
-        document.getElementById("s-likes").textContent = Object.values(
-          localLikes,
-        ).reduce((a, b) => a + b, 0);
-        await logInteraction(currentVideo.video_id, "1", "like");
-        toast("❤️ Like recorded in Cosmos DB!", "success");
-        renderVideos(allVideos);
-      }
+async function modalLike() {
+  if (!currentVideo) return;
+  localLikes[currentVideo.video_id]=(localLikes[currentVideo.video_id]||0)+1;
+  document.getElementById('s-likes').textContent=Object.values(localLikes).reduce((a,b)=>a+b,0);
+  await logInteraction(currentVideo.video_id,'1','like');
+  toast('❤️ Like recorded in Cosmos DB!','success');
+  renderVideos(allVideos);
+}
 
-      async function quickLike(id) {
-        localLikes[id] = (localLikes[id] || 0) + 1;
-        document.getElementById("s-likes").textContent = Object.values(
-          localLikes,
-        ).reduce((a, b) => a + b, 0);
-        await logInteraction(id, "1", "like");
-        toast("❤️ Like recorded!", "success");
-        renderVideos(allVideos);
-      }
+async function quickLike(id) {
+  localLikes[id]=(localLikes[id]||0)+1;
+  document.getElementById('s-likes').textContent=Object.values(localLikes).reduce((a,b)=>a+b,0);
+  await logInteraction(id,'1','like');
+  toast('❤️ Like recorded!','success');
+  renderVideos(allVideos);
+}
 
-      async function logInteraction(video_id, user_id, type) {
-        try {
-          await fetch(API.POST_INTERACTION, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              video_id: String(video_id),
-              user_id: String(user_id),
-              type,
-            }),
-          });
-        } catch (e) {}
-      }
+async function logInteraction(video_id, user_id, type) {
+  try {
+    await fetch(API.POST_INTERACTION,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({video_id:String(video_id),user_id:String(user_id),type})});
+  } catch(e){}
+}
 
-      async function quickDelete(id) {
-        if (!confirm("Delete video ID " + id + "?")) return;
-        try {
-          await fetch(API.DELETE_VIDEO + "%26id%3D" + id, { method: "DELETE" });
-          allVideos = allVideos.filter((v) => v.video_id != id);
-          toast("Video " + id + " deleted!", "success");
-          renderVideos(allVideos);
-          document.getElementById("s-count").textContent = allVideos.length;
-        } catch (e) {
-          toast("Delete failed", "error");
-        }
-      }
+async function quickDelete(id) {
+  if (!confirm('Delete video ID '+id+'?')) return;
+  try {
+    const res = await fetch(API.DELETE_VIDEO+id, {method:'DELETE'});
+    if (res.ok || res.status===200) {
+      allVideos = allVideos.filter(v=>v.video_id!=id);
+      toast('Video '+id+' deleted from Azure SQL!','success');
+      renderVideos(allVideos);
+      document.getElementById('s-count').textContent=allVideos.length;
+    }
+  } catch(e){toast('Delete failed: '+e.message,'error');}
+}
 
-      // ════════════════════════════
-      // UPLOAD
-      // ════════════════════════════
-      function animateEventGrid() {
-        const flow = document.getElementById("event-flow");
-        flow.classList.add("show");
-        const steps = ["ev1", "ev2", "ev3", "ev4", "ev5", "ev6"];
-        steps.forEach(
-          (s) => (document.getElementById(s).className = "event-step"),
-        );
-        steps.forEach((s, i) => {
-          setTimeout(() => {
-            document.getElementById(s).className = "event-step active";
-            if (i > 0)
-              document.getElementById(steps[i - 1]).className =
-                "event-step done";
-          }, i * 600);
-        });
-        setTimeout(
-          () => (document.getElementById("ev6").className = "event-step done"),
-          steps.length * 600,
-        );
-      }
+// ════════════════════════════
+// EVENT GRID ANIMATION
+// ════════════════════════════
+function animateEventGrid() {
+  const flow = document.getElementById('event-flow');
+  flow.classList.add('show');
+  const steps=['ev1','ev2','ev3','ev4','ev5','ev6'];
+  steps.forEach(s=>document.getElementById(s).className='event-step');
+  steps.forEach((s,i)=>{
+    setTimeout(()=>{
+      document.getElementById(s).className='event-step active';
+      if(i>0) document.getElementById(steps[i-1]).className='event-step done';
+    },i*600);
+  });
+  setTimeout(()=>document.getElementById('ev6').className='event-step done',steps.length*600);
+}
 
-      async function doUpload() {
-        const title = document.getElementById("u-title").value.trim();
-        const user_id = parseInt(document.getElementById("u-uid").value) || 1;
-        const blob_url = document.getElementById("u-blob").value.trim();
-        const thumb = document.getElementById("u-thumb").value.trim();
+// ════════════════════════════
+// UPLOAD — POST /api/videos
+// ════════════════════════════
+async function doUpload() {
+  const title    = document.getElementById('u-title').value.trim();
+  const user_id  = parseInt(document.getElementById('u-uid').value)||1;
+  const blob_url = document.getElementById('u-blob').value.trim();
+  const thumb    = document.getElementById('u-thumb').value.trim();
 
-        if (!title) {
-          setStatus("u-msg", "Please enter a title.", "error");
-          return;
-        }
-        if (!blob_url) {
-          setStatus("u-msg", "Please paste the blob URL.", "error");
-          return;
-        }
-        if (!blob_url.startsWith("https://")) {
-          setStatus(
-            "u-msg",
-            "⚠️ Security: URL must start with https://",
-            "error",
-          );
-          return;
-        }
+  if (!title)    { setStatus('u-msg','Please enter a title.','error'); return; }
+  if (!blob_url) { setStatus('u-msg','Please paste the blob URL.','error'); return; }
+  if (!blob_url.startsWith('https://')) { setStatus('u-msg','⚠️ URL must start with https://','error'); return; }
 
-        const thumbnail_url =
-          thumb || "https://picsum.photos/seed/edu" + Date.now() + "/320/180";
+  const thumbnail_url = thumb || 'https://picsum.photos/seed/edu'+Date.now()+'/320/180';
+  const btn = document.getElementById('u-btn');
+  btn.disabled = true;
+  setStatus('u-msg','🔒 Sending POST /api/videos → Logic App → Azure SQL...','loading');
+  animateEventGrid();
 
-        const btn = document.getElementById("u-btn");
-        btn.disabled = true;
-        setStatus(
-          "u-msg",
-          "🔒 Sending POST /videos to Logic App...",
-          "loading",
-        );
-        animateEventGrid();
+  const prog=document.getElementById('prog'); const fill=document.getElementById('fill');
+  prog.classList.add('show');
+  let pct=0; const iv=setInterval(()=>{pct=Math.min(pct+10,90);fill.style.width=pct+'%';},400);
 
-        const prog = document.getElementById("prog");
-        const fill = document.getElementById("fill");
-        prog.classList.add("show");
-        let pct = 0;
-        const iv = setInterval(() => {
-          pct = Math.min(pct + 10, 90);
-          fill.style.width = pct + "%";
-        }, 400);
+  try {
+    const res = await fetch(API.POST_VIDEO, {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        title, user_id, blob_url, thumbnail_url,
+        description: document.getElementById('u-desc').value,
+        category:    document.getElementById('u-cat').value,
+        status:      document.getElementById('u-status').value
+      })
+    });
+    clearInterval(iv); fill.style.width='100%';
+    setTimeout(()=>{prog.classList.remove('show');fill.style.width='0%';},500);
+    btn.disabled=false;
+    if (res.ok||res.status===201||res.status===200) {
+      const data = await res.json().catch(()=>({}));
+      setStatus('u-msg','✅ Video uploaded! SQL row created. video_id: '+(data.video_id||'check SQL'),'success');
+      toast('Video uploaded successfully!','success');
+      speakText('Video uploaded successfully to Edukate. Title: '+title);
+      document.getElementById('u-title').value='';
+      document.getElementById('u-blob').value='';
+      document.getElementById('u-thumb').value='';
+      loadFeed();
+    } else {
+      const err = await res.text();
+      setStatus('u-msg','Upload failed — HTTP '+res.status+': '+err,'error');
+      toast('Upload failed','error');
+    }
+  } catch(e) {
+    clearInterval(iv); btn.disabled=false; prog.classList.remove('show');
+    setStatus('u-msg','Error: '+e.message,'error');
+  }
+}
 
-        try {
-          const res = await fetch(API.POST_VIDEO, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              title,
-              user_id,
-              blob_url,
-              thumbnail_url,
-              description: document.getElementById("u-desc").value,
-              category: document.getElementById("u-cat").value,
-              status: document.getElementById("u-status").value,
-            }),
-          });
-          clearInterval(iv);
-          fill.style.width = "100%";
-          setTimeout(() => {
-            prog.classList.remove("show");
-            fill.style.width = "0%";
-          }, 500);
-          btn.disabled = false;
-          if (res.ok || res.status === 201 || res.status === 200) {
-            const data = await res.json().catch(() => ({}));
-            setStatus(
-              "u-msg",
-              "✅ Video uploaded! video_id: " + (data.video_id || "check SQL"),
-              "success",
-            );
-            toast("Video uploaded successfully!", "success");
-            speakText("Video uploaded successfully. Title: " + title);
-            document.getElementById("u-title").value = "";
-            document.getElementById("u-blob").value = "";
-            document.getElementById("u-thumb").value = "";
-            loadFeed();
-          } else {
-            setStatus("u-msg", "Upload failed — HTTP " + res.status, "error");
-            toast("Upload failed", "error");
-          }
-        } catch (e) {
-          clearInterval(iv);
-          btn.disabled = false;
-          prog.classList.remove("show");
-          setStatus("u-msg", "Error: " + e.message, "error");
-        }
-      }
-
-      // ════════════════════════════
-      // MANAGE
-      // ════════════════════════════
-      async function loadManage() {
-        const list = document.getElementById("manage-list");
-        list.innerHTML = '<div class="empty">Loading...</div>';
-        try {
-          const res = await fetch(API.GET_VIDEOS, { method: "GET" });
-          const data = await res.json();
-          const videos = extractVideos(data);
-          if (!videos.length) {
-            list.innerHTML = '<div class="empty">No videos.</div>';
-            return;
-          }
-          list.innerHTML = videos
-            .map(
-              (v) => `
+// ════════════════════════════
+// MANAGE
+// ════════════════════════════
+async function loadManage() {
+  const list=document.getElementById('manage-list');
+  list.innerHTML='<div class="empty">Loading from Azure SQL...</div>';
+  try {
+    const res=await fetch(API.GET_VIDEOS);
+    const data=await res.json();
+    const videos=extractVideos(data);
+    if(!videos.length){list.innerHTML='<div class="empty">No videos.</div>';return;}
+    list.innerHTML=videos.map(v=>`
       <div class="mitem">
         <img class="mitem-thumb" src="${getThumb(v)}" onerror="this.src='https://picsum.photos/seed/edu${v.video_id}/48/36'">
         <div class="minfo">
-          <div class="mtitle">${sanitise(v.title || "Untitled")}</div>
-          <div class="mmeta">ID: ${v.video_id} · ${sanitise(v.status || "processing")} · ${sanitise(v.category || "—")}</div>
+          <div class="mtitle">${sanitise(v.title||'Untitled')}</div>
+          <div class="mmeta">ID: ${v.video_id} · ${sanitise(v.status||'processing')} · ${sanitise(v.category||'—')}</div>
         </div>
         <button class="btn btn-sm btn-purple" onclick="speakVideoCard(${v.video_id})">🔊</button>
-        <button class="btn btn-sm btn-ghost" onclick="openEdit(${v.video_id},'${(v.title || "").replace(/'/g, "\\'")}','${v.status || ""}','${(v.description || "").replace(/'/g, "\\'")}')">Edit</button>
+        <button class="btn btn-sm btn-ghost" onclick="openEdit(${v.video_id},'${(v.title||'').replace(/'/g,"\\'")}','${v.status||''}','${(v.description||'').replace(/'/g,"\\'")}')">Edit</button>
         <button class="btn btn-sm btn-red" onclick="doDelete(${v.video_id})">Delete</button>
       </div>
-    `,
-            )
-            .join("");
-        } catch (e) {
-          setStatus("m-status", "Error: " + e.message, "error");
-        }
-      }
+    `).join('');
+  } catch(e){setStatus('m-status','Error: '+e.message,'error');}
+}
 
-      function openEdit(id, title, status, desc) {
-        const panel = document.getElementById("edit-panel");
-        panel.style.display = "block";
-        document.getElementById("e-title").value = title;
-        document.getElementById("e-desc").value = desc;
-        document.getElementById("e-status").value = status || "published";
-        document.getElementById("edit-lbl").textContent = "— video ID " + id;
-        panel.dataset.id = id;
-        panel.scrollIntoView({ behavior: "smooth" });
-      }
+function openEdit(id,title,status,desc) {
+  const panel=document.getElementById('edit-panel');
+  panel.style.display='block';
+  document.getElementById('e-title').value=title;
+  document.getElementById('e-desc').value=desc;
+  document.getElementById('e-status').value=status||'published';
+  document.getElementById('edit-lbl').textContent='— video ID '+id;
+  panel.dataset.id=id;
+  panel.scrollIntoView({behavior:'smooth'});
+}
 
-      async function doEdit() {
-        const id = document.getElementById("edit-panel").dataset.id;
-        const title = document.getElementById("e-title").value.trim();
-        if (!title) {
-          setStatus("e-msg", "Title cannot be empty.", "error");
-          return;
-        }
-        setStatus("e-msg", "Sending PUT /videos...", "loading");
-        try {
-          const res = await fetch(API.PUT_VIDEO, {
-            method: "PUT",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              video_id: parseInt(id),
-              title,
-              description: document.getElementById("e-desc").value,
-              status: document.getElementById("e-status").value,
-              category: document.getElementById("e-cat").value,
-            }),
-          });
-          if (res.ok || res.status === 200) {
-            setStatus("e-msg", "✅ Video updated!", "success");
-            toast("Video updated!", "success");
-            document.getElementById("edit-panel").style.display = "none";
-            loadManage();
-          } else {
-            setStatus("e-msg", "Failed — HTTP " + res.status, "error");
-          }
-        } catch (e) {
-          setStatus("e-msg", "Error: " + e.message, "error");
-        }
-      }
+async function doEdit() {
+  const id=document.getElementById('edit-panel').dataset.id;
+  const title=document.getElementById('e-title').value.trim();
+  if(!title){setStatus('e-msg','Title cannot be empty.','error');return;}
+  setStatus('e-msg','Sending PUT /api/videos...','loading');
+  try {
+    const res=await fetch(API.PUT_VIDEO,{
+      method:'PUT',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({video_id:parseInt(id),title,description:document.getElementById('e-desc').value,status:document.getElementById('e-status').value,category:document.getElementById('e-cat').value})
+    });
+    if(res.ok||res.status===200){
+      setStatus('e-msg','✅ Video updated in Azure SQL!','success');
+      toast('Video updated!','success');
+      document.getElementById('edit-panel').style.display='none';
+      loadManage();
+    } else {setStatus('e-msg','Failed — HTTP '+res.status,'error');}
+  } catch(e){setStatus('e-msg','Error: '+e.message,'error');}
+}
 
-      async function doDelete(id) {
-        if (!confirm("Delete video ID " + id + "?")) return;
-        setStatus("m-status", "Deleting...", "loading");
-        try {
-          const res = await fetch(API.DELETE_VIDEO + "%26id%3D" + id, {
-            method: "DELETE",
-          });
-          if (res.ok || res.status === 200) {
-            setStatus("m-status", "✅ Video deleted!", "success");
-            toast("Video deleted!", "success");
-            loadManage();
-          } else {
-            setStatus("m-status", "Failed — HTTP " + res.status, "error");
-          }
-        } catch (e) {
-          setStatus("m-status", "Error: " + e.message, "error");
-        }
-      }
+async function doDelete(id) {
+  if(!confirm('Delete video ID '+id+'?')) return;
+  setStatus('m-status','Deleting from Azure SQL...','loading');
+  try {
+    const res=await fetch(API.DELETE_VIDEO+id,{method:'DELETE'});
+    if(res.ok||res.status===200){
+      setStatus('m-status','✅ Video '+id+' deleted from Azure SQL!','success');
+      toast('Video deleted!','success');
+      loadManage();
+    } else {setStatus('m-status','Failed — HTTP '+res.status,'error');}
+  } catch(e){setStatus('m-status','Error: '+e.message,'error');}
+}
 
-      // ════════════════════════════
-      // USERS
-      // ════════════════════════════
-      async function doRegister() {
-        const username = document.getElementById("r-user").value.trim();
-        const email = document.getElementById("r-email").value.trim();
-        const password = document.getElementById("r-pass").value;
-        if (!username || !email || !password) {
-          setStatus("r-msg", "Fill in all fields.", "error");
-          return;
-        }
-        if (password.length < 8) {
-          setStatus("r-msg", "Password min 8 characters.", "error");
-          return;
-        }
-        setStatus("r-msg", "Sending POST /users...", "loading");
-        try {
-          const res = await fetch(API.POST_USER, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              username,
-              email,
-              password_hash: btoa(password),
-              role: document.getElementById("r-role").value,
-            }),
-          });
-          if (res.ok || res.status === 201 || res.status === 200) {
-            setStatus(
-              "r-msg",
-              '✅ User "' + username + '" created!',
-              "success",
-            );
-            toast("User created!", "success");
-            speakText(
-              "Welcome to Edukate, " +
-                username +
-                ". Your account has been created successfully.",
-            );
-            document.getElementById("r-user").value = "";
-            document.getElementById("r-email").value = "";
-            document.getElementById("r-pass").value = "";
-          } else {
-            setStatus("r-msg", "Failed — HTTP " + res.status, "error");
-          }
-        } catch (e) {
-          setStatus("r-msg", "Error: " + e.message, "error");
-        }
-      }
+// ════════════════════════════
+// USERS
+// ════════════════════════════
+async function doRegister() {
+  const username=document.getElementById('r-user').value.trim();
+  const email=document.getElementById('r-email').value.trim();
+  const password=document.getElementById('r-pass').value;
+  if(!username||!email||!password){setStatus('r-msg','Fill in all fields.','error');return;}
+  if(password.length<8){setStatus('r-msg','Password min 8 characters.','error');return;}
+  setStatus('r-msg','Sending POST /api/users...','loading');
+  try {
+    const res=await fetch(API.POST_USER,{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({username,email,password_hash:btoa(password),role:document.getElementById('r-role').value})
+    });
+    if(res.ok||res.status===201||res.status===200){
+      setStatus('r-msg','✅ User "'+username+'" created in Azure SQL!','success');
+      toast('User created!','success');
+      speakText('Welcome to Edukate, '+username+'. Your account has been created successfully.');
+      document.getElementById('r-user').value='';
+      document.getElementById('r-email').value='';
+      document.getElementById('r-pass').value='';
+    } else {setStatus('r-msg','Failed — HTTP '+res.status,'error');}
+  } catch(e){setStatus('r-msg','Error: '+e.message,'error');}
+}
 
-      async function doInteraction() {
-        const video_id = document.getElementById("i-vid").value.trim();
-        const user_id = document.getElementById("i-uid").value.trim();
-        const type = document.getElementById("i-type").value;
-        if (!video_id || !user_id) {
-          setStatus("i-msg", "Fill in IDs.", "error");
-          return;
-        }
-        setStatus("i-msg", "Sending to Cosmos DB...", "loading");
-        try {
-          const res = await fetch(API.POST_INTERACTION, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ video_id, user_id, type }),
-          });
-          if (res.ok || res.status === 201 || res.status === 200) {
-            setStatus(
-              "i-msg",
-              '✅ "' + type + '" recorded in Cosmos DB!',
-              "success",
-            );
-            toast(type + " recorded!", "success");
-          } else {
-            setStatus("i-msg", "Failed — HTTP " + res.status, "error");
-          }
-        } catch (e) {
-          setStatus("i-msg", "Error: " + e.message, "error");
-        }
-      }
+async function doInteraction() {
+  const video_id=document.getElementById('i-vid').value.trim();
+  const user_id=document.getElementById('i-uid').value.trim();
+  const type=document.getElementById('i-type').value;
+  if(!video_id||!user_id){setStatus('i-msg','Fill in IDs.','error');return;}
+  setStatus('i-msg','Sending to Cosmos DB...','loading');
+  try {
+    const res=await fetch(API.POST_INTERACTION,{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({video_id,user_id,type})
+    });
+    if(res.ok||res.status===201||res.status===200){
+      setStatus('i-msg','✅ "'+type+'" recorded in Cosmos DB!','success');
+      toast(type+' recorded in Cosmos DB!','success');
+    } else {setStatus('i-msg','Failed — HTTP '+res.status,'error');}
+  } catch(e){setStatus('i-msg','Error: '+e.message,'error');}
+}
 
-      window.onload = loadFeed;
-    </script>
-  </body>
+window.onload = loadFeed;
+</script>
+</body>
 </html>

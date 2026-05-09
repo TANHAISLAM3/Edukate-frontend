@@ -1,7 +1,12 @@
 {
   "name": "edukate-frontend",
   "version": "1.0.0",
+  "description": "Edukate cloud learning platform",
+  "main": "server.js",
   "scripts": {
-    "start": "node server.js"
-  }
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "author": "Tanha Islam Sarani",
+  "license": "ISC"
 }
